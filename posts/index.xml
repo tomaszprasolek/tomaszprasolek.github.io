@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on tomaszprasolek.pl - BLOG</title>
+    <link>https://tomaszprasolek.github.io/posts/</link>
+    <description>Recent content in Posts on tomaszprasolek.pl - BLOG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>pl</language>
+    <lastBuildDate>Tue, 11 Aug 2020 06:36:23 +0100</lastBuildDate><atom:link href="https://tomaszprasolek.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Prywatny konstruktor – kiedy może się przydać?</title>
+      <link>https://tomaszprasolek.github.io/posts/prywatny-konstruktor/</link>
+      <pubDate>Tue, 11 Aug 2020 06:36:23 +0100</pubDate>
+      
+      <guid>https://tomaszprasolek.github.io/posts/prywatny-konstruktor/</guid>
+      <description>&lt;p&gt;W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Aplikacja LazyGit 692 dni później</title>
+      <link>https://tomaszprasolek.github.io/posts/lazygit-692dni-pozniej/</link>
+      <pubDate>Mon, 20 Jul 2020 06:52:21 +0100</pubDate>
+      
+      <guid>https://tomaszprasolek.github.io/posts/lazygit-692dni-pozniej/</guid>
+      <description>&lt;p&gt;Prawie 2 lata temu opublikowałem na blogu recenzję aplikacji LazyGit. Wtedy była ona dopiero 3 miesiące po wypuszczeniu i miała sporo braków. Nie dało się z nią pracować.&lt;/p&gt;
+&lt;p&gt;Ostatnio mi się przypomniało o niej i postanowiłem znowu dać jej szansę i moje wrażenia opisać na blogu. Od razu mogę powiedzieć, że jest &lt;strong&gt;dużo lepiej 👍&lt;/strong&gt;.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Przeniesienie strony zrobionej w WordPress na inny serwer</title>
+      <link>https://tomaszprasolek.github.io/posts/przeniesienie-strony-wp/</link>
+      <pubDate>Sat, 18 Jul 2020 06:58:13 +0100</pubDate>
+      
+      <guid>https://tomaszprasolek.github.io/posts/przeniesienie-strony-wp/</guid>
+      <description>&lt;p&gt;Moja żona jest grafikiem i pomagam jej w ramach jej studia graficznego: &lt;a href=&#34;https://solovestudio.pl/&#34;&gt;https://solovestudio.pl/&lt;/a&gt; robić strony internetowe oparte o system zarządzania treścią WordPress. Gosia przygotowuje całą stronę od strony wizualnej, dla mnie zostają kwestie techniczne :-) Czyli na przykład przeniesienie jej z serwera testowego na serwer klienta.&lt;/p&gt;
+&lt;p&gt;W tym wpisie pokażę jak to zrobić. Będzie to ogólny opis procesu. Nie będzie szczegółów jak działa program FileZilla do połączenia z serwerem FTP, jak zainstalować narzędzie Search-Replace-DB. Te informacje można znaleźć w internecie. Będzie to ogólny opis kroków jakie trzeba wykonać aby przenieść stronę z jednego serwera na drugi.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>[ASP.NET Core] Partial views – widoki częściowe</title>
+      <link>https://tomaszprasolek.github.io/posts/aspnetcore-partialviews/</link>
+      <pubDate>Tue, 23 Jun 2020 07:05:51 +0100</pubDate>
+      
+      <guid>https://tomaszprasolek.github.io/posts/aspnetcore-partialviews/</guid>
+      <description>Tworząc jakiś system prędzej czy później trafimy na taki widok w naszej aplikacji, który się powtarza w wielu miejscach. Czasami jest to dokładnie ten sam widok, z tymi samymi danymi, a czasami ten sam widok, ale z różnymi danymi.
+Żeby nie kopiować w wiele miejsc tego samego kodu, można użyć w ASP.NET CORE widoków częściowych, czyli partial views.
+Krótki opis Widok częściowy jest to kod, który można umieszczać w innych widokach.</description>
+    </item>
+    
+    <item>
+      <title>[ASP.NET Core] TypeConverter zamiast IModelBinder</title>
+      <link>https://tomaszprasolek.github.io/posts/aspnetcore-typeconverter/</link>
+      <pubDate>Mon, 15 Jun 2020 07:11:48 +0100</pubDate>
+      
+      <guid>https://tomaszprasolek.github.io/posts/aspnetcore-typeconverter/</guid>
+      <description>W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.
+Użyłem do wyboru tygodnia standardowego znacznika HTML:
+&amp;lt;input type=&amp;quot;week&amp;quot;&amp;gt; Opis problemu Ten znacznik przesyła dane w postaci 2020-W24, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę Week.
+Zawiera ona jeden konstruktor:
+public Week(int year, int week) { Year = year; WeekNr = week; } Przeciążyłem metodę ToString, aby zwracało informacje w formacie z kontrolki &amp;lt;input type=&amp;quot;week&amp;quot;&amp;gt;</description>
+    </item>
+    
+    <item>
+      <title>Serilog – jak filtrować logi?</title>
+      <link>https://tomaszprasolek.github.io/posts/2020-05-28-serilog-filtrowanie/</link>
+      <pubDate>Thu, 28 May 2020 07:27:51 +0100</pubDate>
+      
+      <guid>https://tomaszprasolek.github.io/posts/2020-05-28-serilog-filtrowanie/</guid>
+      <description>Ostatnio w moim jednym pet projekcie (pisany w ASP.NET Core 3.1.) wymyśliłem sobie tak, aby do bazy zapisywane były tylko te logi, które:
+ W polu SourceContext zawieraja się namespace aplikacji lub Pole @Exception nie jest puste.  Chciałem do bazy zapisywać tylko błędy oraz moje logi z aplikacji, żeby widzieć jak aplikacja działa. Zapisuję tylko to, bo do tych błędów będą miał zrobioną na stronie oddzielną podstronę do ich przeglądania.</description>
+    </item>
+    
+  </channel>
+</rss>

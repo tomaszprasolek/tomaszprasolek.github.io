@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/oblogu/</loc>
+    <lastmod>2020-12-12T07:52:37+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/omnie/</loc>
+    <lastmod>2020-12-11T07:48:05+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/posts/</loc>
+    <lastmod>2020-08-11T06:36:23+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/posts/prywatny-konstruktor/</loc>
+    <lastmod>2020-08-11T06:36:23+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/</loc>
+    <lastmod>2020-08-11T06:36:23+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/posts/lazygit-692dni-pozniej/</loc>
+    <lastmod>2020-07-20T06:52:21+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/posts/przeniesienie-strony-wp/</loc>
+    <lastmod>2020-07-18T06:58:13+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/posts/aspnetcore-partialviews/</loc>
+    <lastmod>2020-06-23T07:05:51+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/posts/aspnetcore-typeconverter/</loc>
+    <lastmod>2020-06-15T07:11:48+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/posts/2020-05-28-serilog-filtrowanie/</loc>
+    <lastmod>2020-05-28T07:27:51+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/tags/</loc>
+  </url>
+  
+</urlset>

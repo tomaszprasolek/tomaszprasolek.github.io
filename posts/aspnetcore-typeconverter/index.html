@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name=" robots" content="noindex, nofollow">
+<title>[ASP.NET Core] TypeConverter zamiast IModelBinder | tomaszprasolek.pl - BLOG</title>
+
+<meta name="keywords" content="" />
+<meta name="description" content="W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.
+Użyłem do wyboru tygodnia standardowego znacznika HTML:
+&lt;input type=&quot;week&quot;&gt; Opis problemu Ten znacznik przesyła dane w postaci 2020-W24, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę Week.
+Zawiera ona jeden konstruktor:
+public Week(int year, int week) { Year = year; WeekNr = week; } Przeciążyłem metodę ToString, aby zwracało informacje w formacie z kontrolki &lt;input type=&quot;week&quot;&gt;">
+<meta name="author" content="">
+<link rel="canonical" href="https://tomaszprasolek.github.io/posts/aspnetcore-typeconverter/" />
+<link href="https://tomaszprasolek.github.io/assets/css/stylesheet.min.3236305eeb06e2d7ad08411cda3ab44a19b3500b1b978b6a6b4b3b9c307a1db7.css" integrity="sha256-MjYwXusG4tetCEEc2jq0ShmzUAsbl4tqa0s7nDB6Hbc=" rel="preload stylesheet"
+    as="style">
+
+<link rel="icon" href="https://tomaszprasolek.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://tomaszprasolek.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://tomaszprasolek.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://tomaszprasolek.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://tomaszprasolek.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.79.0" />
+
+
+
+
+</head>
+
+<body class="">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<noscript>
+    <style type="text/css">
+        .theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://tomaszprasolek.github.io/" accesskey="h">tomaszprasolek.pl - BLOG</a>
+            <span class="logo-switches">
+                <span class="theme-toggle">
+                    <a id="theme-toggle" accesskey="t">
+                        <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </a>
+                </span>
+                
+            </span>
+        </div>
+        <ul class="menu" id="menu" onscroll="menu_on_scroll()">
+            <li>
+                <a href="https://tomaszprasolek.github.io/oblogu/">
+                    <span>
+                        O blogu
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="https://tomaszprasolek.github.io/omnie/">
+                    <span>
+                        O mnie
+                    </span>
+                </a>
+            </li></ul>
+    </nav>
+</header>
+
+    <main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <h1 class="post-title">
+      [ASP.NET Core] TypeConverter zamiast IModelBinder
+    </h1>
+    <div class="post-meta">June 15, 2020
+
+    </div>
+  </header> 
+
+  <div class="post-content">
+<p>W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.</p>
+<p><img src="/TypeConverter_WygladKontrolki.png" alt="Image"></p>
+<p>Użyłem do wyboru tygodnia standardowego znacznika HTML:</p>
+<pre><code>&lt;input type=&quot;week&quot;&gt;
+</code></pre><h1 id="opis-problemu">Opis problemu<a hidden class="anchor" aria-hidden="true" href="#opis-problemu">#</a></h1>
+<p>Ten znacznik przesyła dane w postaci <code>2020-W24</code>, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę <code>Week</code>.</p>
+<p>Zawiera ona jeden konstruktor:</p>
+<pre><code>public Week(int year, int week)
+{
+    Year = year;
+    WeekNr = week;
+}
+</code></pre><p>Przeciążyłem metodę ToString, aby zwracało informacje w formacie z kontrolki <code>&lt;input type=&quot;week&quot;&gt;</code></p>
+<pre><code>public override string ToString()
+{
+    return $&quot;{Year}-W{WeekNr}&quot;;
+}
+</code></pre><p>Zawiera jeszcze kilka metod pomocniczych:</p>
+<pre><code>public DateTime GetFirstDayOfWeek()
+public static Week GetCurrentWeek()
+public Week GetNextWeek()
+public Week GetPreviousWeek()
+public string GetDaysInWeekPeriod()
+</code></pre><p>Wszystko spoko działa :-) Tylko za każdym razem jak przesyłam dane z formularza, to muszę stringa z informacją o tygodniu i roku przekształcać na obiekt <code>Week</code>. Chciałbym aby automatycznie to się robiło.</p>
+<p>Ucząc się podstaw ASP.NET Core czytałem oczywiście o czymś taki jak bindowanie danych. Framework sam konwertuje teksty na odpowiedni typ, dzięki temu programista już nie musi się o to martwić. Skoro takie coś istnieje, to pomyślałem, że pewnie da się jakąś własną klasę napisać, która zamieni przychodzący tekst na obiekt <code>Week</code>.</p>
+<p>Zacząłem googlować <strong>custom model binding</strong> i trafiłem na artykuł <a href="https://docs.microsoft.com/pl-pl/aspnet/core/mvc/advanced/custom-model-binding?view=aspnetcore-3.1">Custom Model Binding in ASP.NET Core</a> z oficjalnej dokumentacji. Jest tam napisane jak zrobić własne bindowanie do własnego modelu.</p>
+<p>Już zacząłem to robić. Dodałem klasę, która implementowała interfejs <code>IModelBinder</code>, ale na szczęście doczytałem artykuł do końca :-)</p>
+<p>Disclaimer: Czasami zdarza mi się, że szybko chce coś zrobić i przeglądam tylko kod kopiuje go do siebie, a potem się denerwuje, że coś nie działa. Okazuje się, że coś pominę i nie doczytam… i nie działa.</p>
+<p>Na końcu jest napisane:</p>
+<blockquote>
+<p>Typically shouldn’t be used to convert a string into a custom type, a TypeConverter is usually a better option.</p>
+</blockquote>
+<h1 id="użycie-typeconverter-zamiast-imodelbinder">Użycie TypeConverter zamiast IModelBinder<a hidden class="anchor" aria-hidden="true" href="#użycie-typeconverter-zamiast-imodelbinder">#</a></h1>
+<p>I tak zrobiłem :-) I wszystko działa i wydaje się nawet, że jest to prostsze rozwiązanie. Co musiałem zrobić?</p>
+<p>Dodać klasę <code>WeekConverter</code>, która dziedziczy po klasie <code>TypeConverter</code>:</p>
+<pre><code>public class WeekConverter : TypeConverter
+{
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+    {
+        if (sourceType == typeof(string))
+            return true;
+        return base.CanConvertFrom(context, sourceType);
+    }
+
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+    {
+        if (value is string isoWeek)
+        {
+            var result = isoWeek.Split(&quot;-W&quot;);
+            return new Week(Convert.ToInt32(result[0]), Convert.ToInt32(result[1]));
+        }
+
+        return base.ConvertFrom(context, culture, value);
+    }
+}
+</code></pre><p>Zaimplementowałem tylko 2 metody, których potrzebuję:</p>
+<ul>
+<li>CanConvertFrom</li>
+<li>ConvertFrom</li>
+</ul>
+<p>TypeConverter konweruje w 2 strony ale mi tylko była potrzebna konwersja z typu <code>string</code> do <code>Week</code>.</p>
+<p>Dodatkowo klasę <code>Week</code> musiałem oznaczyć atrybutem:</p>
+<pre><code>[TypeConverter(typeof(WeekConverter))]
+public class Week
+</code></pre><p>W metodzie oczywiście zmieniłem typ na <code>Week</code> + parę drobnych poprawek i już :-) I tylko tyle :-) Wszystko już działa.</p>
+<p>Z formularza na stronie dostaję od razu obiekt <code>Week</code>, a nie <code>string</code>.</p>
+<h1 id="podsumowanie">Podsumowanie<a hidden class="anchor" aria-hidden="true" href="#podsumowanie">#</a></h1>
+<p>Jeśli możesz używaj <strong>TypeConverter</strong> zamiast własnego bindowania modelu. Czytaj dokumentację i artykuły do końca, mogą się tam znajdować ważne informacje.</p>
+
+</div>
+  <footer class="post-footer">
+  </footer>
+</article>
+    </main><footer class="footer">
+    <span>&copy; 2020 <a href="https://tomaszprasolek.github.io/">tomaszprasolek.pl - BLOG</a></span>
+    <span>&middot;</span>
+    <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span>
+    <span>&middot;</span>
+    <span>Theme <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a></span>
+</footer>
+<button class="top-link" id="top-link" type="button" aria-label="go to top" title="Go to Top" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6">
+        <path d="M12 6H0l6-6z" /></svg>
+</button>
+
+
+
+<script defer src="https://tomaszprasolek.github.io/assets/js/highlight.min.27cd435cc9ed6abb4b496581b151804f79f366c412620272bb94e2f5f598ebcc.js" integrity="sha256-J81DXMntartLSWWBsVGAT3nzZsQSYgJyu5Ti9fWY68w="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<script>
+    window.onload = function () {
+        if (localStorage.getItem("menu-scroll-position")) {
+            document.getElementById('menu').scrollLeft = localStorage.getItem("menu-scroll-position");
+        }
+    }
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+    mybutton.onclick = function () {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+        window.location.hash = ''
+    }
+
+    function menu_on_scroll() {
+        localStorage.setItem("menu-scroll-position", document.getElementById('menu').scrollLeft);
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+</body>
+
+</html>
