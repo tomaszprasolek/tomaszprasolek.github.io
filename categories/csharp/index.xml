@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>csharp on Blog o programowaniu</title>
+    <link>https://tomaszprasolek.github.io/categories/csharp/</link>
+    <description>Recent content in csharp on Blog o programowaniu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>pl-PL</language>
+    <lastBuildDate>Tue, 11 Aug 2020 06:36:23 +0100</lastBuildDate><atom:link href="https://tomaszprasolek.github.io/categories/csharp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Prywatny konstruktor – kiedy może się przydać?</title>
+      <link>https://tomaszprasolek.github.io/posts/prywatny-konstruktor/</link>
+      <pubDate>Tue, 11 Aug 2020 06:36:23 +0100</pubDate>
+      
+      <guid>https://tomaszprasolek.github.io/posts/prywatny-konstruktor/</guid>
+      <description>&lt;p&gt;W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

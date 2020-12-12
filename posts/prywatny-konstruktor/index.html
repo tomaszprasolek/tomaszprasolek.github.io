@@ -1,121 +1,147 @@
 <!DOCTYPE html>
-<html lang="en" dir="auto">
-
-<head><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name=" robots" content="noindex, nofollow">
-<title>Prywatny konstruktor – kiedy może się przydać? | tomaszprasolek.pl - BLOG</title>
-
-<meta name="keywords" content="" />
-<meta name="description" content="W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów.">
 <meta name="author" content="">
+<meta name="description" content="W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów.
+" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
 <link rel="canonical" href="https://tomaszprasolek.github.io/posts/prywatny-konstruktor/" />
-<link href="https://tomaszprasolek.github.io/assets/css/stylesheet.min.3236305eeb06e2d7ad08411cda3ab44a19b3500b1b978b6a6b4b3b9c307a1db7.css" integrity="sha256-MjYwXusG4tetCEEc2jq0ShmzUAsbl4tqa0s7nDB6Hbc=" rel="preload stylesheet"
-    as="style">
 
-<link rel="icon" href="https://tomaszprasolek.github.io/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://tomaszprasolek.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://tomaszprasolek.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://tomaszprasolek.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://tomaszprasolek.github.io/safari-pinned-tab.svg">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<meta name="generator" content="Hugo 0.79.0" />
+
+    <title>
+        
+            Prywatny konstruktor – kiedy może się przydać? :: Blog o programowaniu 
+        
+    </title>
 
 
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
 
-</head>
 
-<body class="">
-<script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
 
-</script>
-<noscript>
-    <style type="text/css">
-        .theme-toggle,
-        .top-link {
-            display: none;
-        }
+<link rel="stylesheet" href="/main.393856bf2c430bb6c01d7af07c6fe966e7cce8073435cfbbc46e590bab7405ef.css">
 
-    </style>
-</noscript>
-<header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="https://tomaszprasolek.github.io/" accesskey="h">tomaszprasolek.pl - BLOG</a>
-            <span class="logo-switches">
-                <span class="theme-toggle">
-                    <a id="theme-toggle" accesskey="t">
-                        <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
-                        <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                    </a>
-                </span>
-                
+
+
+
+
+
+<meta itemprop="name" content="Prywatny konstruktor – kiedy może się przydać?">
+<meta itemprop="description" content="W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów.">
+<meta itemprop="datePublished" content="2020-08-11T06:36:23+01:00" />
+<meta itemprop="dateModified" content="2020-08-11T06:36:23+01:00" />
+<meta itemprop="wordCount" content="677">
+
+
+
+<meta itemprop="keywords" content="" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Prywatny konstruktor – kiedy może się przydać?"/>
+<meta name="twitter:description" content="W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów."/>
+
+
+
+
+
+    <meta property="article:section" content="csharp" />
+
+
+
+    <meta property="article:published_time" content="2020-08-11 06:36:23 &#43;0100 &#43;0100" />
+
+
+
+
+
+
+
+
+    </head>
+
+    <body class="">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">dotnet build</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#00994d;
+                   ">
             </span>
-        </div>
-        <ul class="menu" id="menu" onscroll="menu_on_scroll()">
-            <li>
-                <a href="https://tomaszprasolek.github.io/oblogu/">
-                    <span>
-                        O blogu
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a href="https://tomaszprasolek.github.io/omnie/">
-                    <span>
-                        O mnie
-                    </span>
-                </a>
-            </li></ul>
-    </nav>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="https://tomaszprasolek.github.io/omnie">o mnie</a></li><li><a href="https://tomaszprasolek.github.io/posts">wpisy</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
 </header>
 
-    <main class="main">
 
-<article class="post-single">
-  <header class="post-header">
-    <h1 class="post-title">
-      Prywatny konstruktor – kiedy może się przydać?
-    </h1>
-    <div class="post-meta">August 11, 2020
+            <div class="content">
+                
+  <main class="post">
 
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
     </div>
-  </header> 
 
-  <div class="post-content">
-<p>W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów.</p>
-<h1 id="gra-karciania-gameover">Gra karciania “GameOver”<a hidden class="anchor" aria-hidden="true" href="#gra-karciania-gameover">#</a></h1>
+    <article>
+      <h1 class="post-title">
+        <a href="https://tomaszprasolek.github.io/posts/prywatny-konstruktor/">Prywatny konstruktor – kiedy może się przydać?</a>
+      </h1>
+
+      
+
+      <div class="post-content">
+        <p>W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów.</p>
+<h1 id="gra-karciania-gameover">Gra karciania “GameOver”</h1>
 <p><img src="/game_over_gra.jpg" alt="Image"></p>
 <p>W domu gramy trochę w gry planszowe i karciane. W ramach zabawy i poznania frameworka Blazor postanowiłem zaprogramować grę “GameOver”. Jest to gra karciana wydana przez wydawnictwo <a href="https://nk.com.pl/">Nasza księgarnia</a>.</p>
 <p>Więcej o grze przeczytasz tutaj: <a href="https://nk.com.pl/game-over/2539/gra.html#.XzEWPogzZhE">https://nk.com.pl/game-over/2539/gra.html#.XzEWPogzZhE</a></p>
 <p>Gra jest już prawie na ukończeniu. Został do poprawy bug podczas napotkania smoka + drobne poprawki w interfejsie. Jak skończę ją pisać to opublikuję informację o tym.</p>
-<h1 id="obiekt-card">Obiekt Card<a hidden class="anchor" aria-hidden="true" href="#obiekt-card">#</a></h1>
+<h1 id="obiekt-card">Obiekt Card</h1>
 <p>W swoim kodzie posiadam klasę <code>Card</code>, która odpowiada za pojedynczą kartę do gry. Taka karta może być różnego typu:</p>
 <p>Klucz
 Skrzynia ze skarbem danego gracza
@@ -123,164 +149,185 @@ Wróg z którym się walczy
 Drzwi
 Smok – też to jest wróg, ale jego nie da się pokonać, dlatego dałem go jako oddzielny typ.
 Dodatkowo jeśli karta jest skrzynią, musimy określić, którego gracza to skrzynia. A jeśli karta to wróg, to musimy wiedzieć jaką ma broń. W każdym innym przypadku ważny jest tylko typ. Na początku klasę zaprojektowałem tak:</p>
-<pre><code>public class Card
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Card</span>
 {
-    public CardType Type { get; }
-    public PlayerType? ChestOwner { get; }
-    public Weapon? Weapon { get; }
+    <span style="color:#66d9ef">public</span> CardType Type { <span style="color:#66d9ef">get</span>; }
+    <span style="color:#66d9ef">public</span> PlayerType? ChestOwner { <span style="color:#66d9ef">get</span>; }
+    <span style="color:#66d9ef">public</span> Weapon? Weapon { <span style="color:#66d9ef">get</span>; }
 
-    public Card(CardType type)
+    <span style="color:#66d9ef">public</span> Card(CardType type)
     {
         Type = type;
     }
 
-    public Card(CardType type, Weapon weapon)
+    <span style="color:#66d9ef">public</span> Card(CardType type, Weapon weapon)
     {
         Type = type;
         Weapon = weapon;
     }
 
-    public Card(CardType type, PlayerType chestOwner)
+    <span style="color:#66d9ef">public</span> Card(CardType type, PlayerType chestOwner)
     {
         Type = type;
         ChestOwner = chestOwner;
     }
 }
-</code></pre><p><code>CardType</code>, <code>PlayerType</code> oraz <code>Weapon</code> to enumy.</p>
+</code></pre></div><p><code>CardType</code>, <code>PlayerType</code> oraz <code>Weapon</code> to enumy.</p>
 <p>Klasa zawiera 3 konstruktory publiczne, które mają różne przeznaczenia. Pierwszy służy do stworzenia kart typu: smok, drzwi i klucz. Drugi do stworzenia karty wroga, a trzeci skrzyni gracza.</p>
 <p>Czy używając tych konstruktorów mógłbym stworzyć kartę skrzyni wraz z jakąś bronią? Oczywiście, że tak, jeśli użyłbym drugiego konstruktora.</p>
 <p>Można się przed tym zabezpieczyć sprawdzają jakie dane są przekazywane do konstruktora i np. wyrzucić wyjątek. Jednak jest lepsze rozwiązanie.</p>
-<h1 id="publiczne-statyczne-metody">Publiczne statyczne metody<a hidden class="anchor" aria-hidden="true" href="#publiczne-statyczne-metody">#</a></h1>
+<h1 id="publiczne-statyczne-metody">Publiczne statyczne metody</h1>
 <p>Zamiast tego można zrobić odpowiednie metody statyczne tworzące obiekt. W tych metodach przekazujemy tylko te dane, które są niezbędne. Reszta jest ustawiania wewnątrz metody, dzięki temu nie można już pomylić parametrów. Moje metody tworzące wyglądają tak:</p>
-<pre><code>public static Card CreateCard(CardType type)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateCard(CardType type)
 {
-    return new Card(type);
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(type);
 }
 
-public static Card CreateChestCard(PlayerType owner)
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateChestCard(PlayerType owner)
 {
-    return new Card(CardType.Chest, owner);
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(CardType.Chest, owner);
 }
 
-public static Card CreateEnemyCard(Weapon Weapon)
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateEnemyCard(Weapon Weapon)
 {
-    return new Card(CardType.Enemy, Weapon);
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(CardType.Enemy, Weapon);
 }
-</code></pre><p><strong>Pierwszą</strong> zaletą tego rozwiązania jest to, że nie stworzymy już obiektu ze złymi właściwościami.</p>
+</code></pre></div><p><strong>Pierwszą</strong> zaletą tego rozwiązania jest to, że nie stworzymy już obiektu ze złymi właściwościami.</p>
 <ul>
 <li>W metodzie <code>CreateChestCard</code> przekazujemy tylko, który gracz będzie właścicielem skrzyni. Typ karty <code>Chest</code> znajduje się wewnątrz metody.</li>
 <li>W metodzie <code>CreateEnemyCard</code> przekazujemy tylko typ broni. Typ karty <code>Enemy</code> znajduje się wewnątrz metody.</li>
 </ul>
 <p><strong>Drugą</strong> zaletą jest to, że mamy jasno nazwane metody, widać od razu co robię. Nie musimy przeglądać parametrów konstruktora i czytać komentarzy, aby dowiedzieć się co on robi. Zwiększa się również czytelność kodu.</p>
-<h1 id="konstruktor-prywatny">Konstruktor prywatny<a hidden class="anchor" aria-hidden="true" href="#konstruktor-prywatny">#</a></h1>
+<h1 id="konstruktor-prywatny">Konstruktor prywatny</h1>
 <p>I tutaj właśnie wkraczają całe na biało <strong>konstruktory prywatne</strong>. Bo żeby stworzyć obiekt, trzeba użyć konstruktora, tak jak zrobiłem w przykładzie wyżej. Ale jeśli zostawimy je publiczne, to ktoś może z nich skorzystać i zrobić obiekt ze złymi parametrami. Po refaktoringu klasa <code>Card</code> wygląda następująco:</p>
-<pre><code>public class Card
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Card</span>
 {
-    public CardType Type { get; }
-    public PlayerType? ChestOwner { get; }
-    public Weapon? Weapon { get; }
+    <span style="color:#66d9ef">public</span> CardType Type { <span style="color:#66d9ef">get</span>; }
+    <span style="color:#66d9ef">public</span> PlayerType? ChestOwner { <span style="color:#66d9ef">get</span>; }
+    <span style="color:#66d9ef">public</span> Weapon? Weapon { <span style="color:#66d9ef">get</span>; }
 
-    private Card(CardType type)
+    <span style="color:#66d9ef">private</span> Card(CardType type)
     {
         Type = type;
     }
 
-    private Card(CardType type, Weapon weapon)
+    <span style="color:#66d9ef">private</span> Card(CardType type, Weapon weapon)
     {
         Type = type;
         Weapon = weapon;
     }
 
-    private Card(CardType type, PlayerType chestOwner)
+    <span style="color:#66d9ef">private</span> Card(CardType type, PlayerType chestOwner)
     {
         Type = type;
         ChestOwner = chestOwner;
     }
 
-    public static Card CreateCard(CardType type)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateCard(CardType type)
     {
-        return new Card(type);
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(type);
     }
 
-    public static Card CreateChestCard(PlayerType owner)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateChestCard(PlayerType owner)
     {
-        return new Card(CardType.Chest, owner);
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(CardType.Chest, owner);
     }
 
-    public static Card CreateEnemyCard(Weapon Weapon)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateEnemyCard(Weapon Weapon)
     {
-        return new Card(CardType.Enemy, Weapon);
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(CardType.Enemy, Weapon);
     }
 }
-</code></pre><p>Klasa zawiera teraz po 3:</p>
+</code></pre></div><p>Klasa zawiera teraz po 3:</p>
 <ul>
 <li>właściwości,</li>
 <li>prywatne konstruktory,</li>
 <li>publiczne statyczne metody, które służą do stworzenia obiektów.</li>
 </ul>
 <p>Oczywiście tej gry już nikt nie będzie zmieniał, mógłbym zostawić klasę <code>Card</code> w takiej postaci jak była na początku wpisu. Ale stwierdziłem, że to akurat jest idealne zastosowanie metod tworzących i dobry temat na wpis, więc postanowiłem zrefaktorować kod :-)</p>
-<h1 id="podsumowanie">Podsumowanie<a hidden class="anchor" aria-hidden="true" href="#podsumowanie">#</a></h1>
+<h1 id="podsumowanie">Podsumowanie</h1>
 <p>W ten oto łatwy sposób, używając metod tworzących i konstruktorów prywatnych, można zabezpieczyć tworzenie obiektów. Od teraz już nikt (no chyba, że ktoś zmieni kod :-) ) nie stworzy nieprawidłowych obiektów kart.</p>
-</div>
-  <footer class="post-footer">
-  </footer>
-</article>
-    </main><footer class="footer">
-    <span>&copy; 2020 <a href="https://tomaszprasolek.github.io/">tomaszprasolek.pl - BLOG</a></span>
-    <span>&middot;</span>
-    <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span>
-    <span>&middot;</span>
-    <span>Theme <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a></span>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder meta-icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+
+        <span class="tag"><a href="https://tomaszprasolek.github.io/categories/csharp/">csharp</a></span>
+        
+    </p>
+
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        677 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-08-11 07:36
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2020</span>
+            
+            <span><a href="https://tomaszprasolek.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Tomasz Prasołek - Copyright 2020</span>
+          </div>
+    </div>
 </footer>
-<button class="top-link" id="top-link" type="button" aria-label="go to top" title="Go to Top" accesskey="g">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6">
-        <path d="M12 6H0l6-6z" /></svg>
-</button>
+
+            
+        </div>
+
+        
 
 
 
-<script defer src="https://tomaszprasolek.github.io/assets/js/highlight.min.27cd435cc9ed6abb4b496581b151804f79f366c412620272bb94e2f5f598ebcc.js" integrity="sha256-J81DXMntartLSWWBsVGAT3nzZsQSYgJyu5Ti9fWY68w="
-    onload="hljs.initHighlightingOnLoad();"></script>
-<script>
-    window.onload = function () {
-        if (localStorage.getItem("menu-scroll-position")) {
-            document.getElementById('menu').scrollLeft = localStorage.getItem("menu-scroll-position");
-        }
-    }
-    var mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-    mybutton.onclick = function () {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-        window.location.hash = ''
-    }
 
-    function menu_on_scroll() {
-        localStorage.setItem("menu-scroll-position", document.getElementById('menu').scrollLeft);
-    }
+<script type="text/javascript" src="/bundle.min.dc716e9092c9820b77f96da294d0120aeeb189b5bcea9752309ebea27fd53bbe6b13cffb2aca8ecf32525647ceb7001f76091de4199ac5a3caa432c070247f5b.js" integrity="sha512-3HFukJLJggt3&#43;W2ilNASCu6xibW86pdSMJ6&#43;on/VO75rE8/7KsqOzzJSVkfOtwAfdgkd5BmaxaPKpDLAcCR/Ww=="></script>
 
-</script>
-<script>
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
-            localStorage.setItem("pref-theme", 'light');
-        } else {
-            document.body.classList.add('dark');
-            localStorage.setItem("pref-theme", 'dark');
-        }
-    })
 
-</script>
 
-</body>
-
+    </body>
 </html>

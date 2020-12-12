@@ -1,138 +1,165 @@
 <!DOCTYPE html>
-<html lang="en" dir="auto">
-
-<head><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name=" robots" content="noindex, nofollow">
-<title>[ASP.NET Core] Partial views – widoki częściowe | tomaszprasolek.pl - BLOG</title>
-
-<meta name="keywords" content="" />
+<meta name="author" content="">
 <meta name="description" content="Tworząc jakiś system prędzej czy później trafimy na taki widok w naszej aplikacji, który się powtarza w wielu miejscach. Czasami jest to dokładnie ten sam widok, z tymi samymi danymi, a czasami ten sam widok, ale z różnymi danymi.
 Żeby nie kopiować w wiele miejsc tego samego kodu, można użyć w ASP.NET CORE widoków częściowych, czyli partial views.
-Krótki opis Widok częściowy jest to kod, który można umieszczać w innych widokach.">
-<meta name="author" content="">
+Krótki opis Widok częściowy jest to kod, który można umieszczać w innych widokach." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
 <link rel="canonical" href="https://tomaszprasolek.github.io/posts/aspnetcore-partialviews/" />
-<link href="https://tomaszprasolek.github.io/assets/css/stylesheet.min.3236305eeb06e2d7ad08411cda3ab44a19b3500b1b978b6a6b4b3b9c307a1db7.css" integrity="sha256-MjYwXusG4tetCEEc2jq0ShmzUAsbl4tqa0s7nDB6Hbc=" rel="preload stylesheet"
-    as="style">
 
-<link rel="icon" href="https://tomaszprasolek.github.io/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://tomaszprasolek.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://tomaszprasolek.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://tomaszprasolek.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://tomaszprasolek.github.io/safari-pinned-tab.svg">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<meta name="generator" content="Hugo 0.79.0" />
+
+    <title>
+        
+            [ASP.NET Core] Partial views – widoki częściowe :: Blog o programowaniu 
+        
+    </title>
 
 
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
 
-</head>
 
-<body class="">
-<script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
 
-</script>
-<noscript>
-    <style type="text/css">
-        .theme-toggle,
-        .top-link {
-            display: none;
-        }
+<link rel="stylesheet" href="/main.393856bf2c430bb6c01d7af07c6fe966e7cce8073435cfbbc46e590bab7405ef.css">
 
-    </style>
-</noscript>
-<header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="https://tomaszprasolek.github.io/" accesskey="h">tomaszprasolek.pl - BLOG</a>
-            <span class="logo-switches">
-                <span class="theme-toggle">
-                    <a id="theme-toggle" accesskey="t">
-                        <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
-                        <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                    </a>
-                </span>
-                
+
+
+
+
+
+<meta itemprop="name" content="[ASP.NET Core] Partial views – widoki częściowe">
+<meta itemprop="description" content="Tworząc jakiś system prędzej czy później trafimy na taki widok w naszej aplikacji, który się powtarza w wielu miejscach. Czasami jest to dokładnie ten sam widok, z tymi samymi danymi, a czasami ten sam widok, ale z różnymi danymi.
+Żeby nie kopiować w wiele miejsc tego samego kodu, można użyć w ASP.NET CORE widoków częściowych, czyli partial views.
+Krótki opis Widok częściowy jest to kod, który można umieszczać w innych widokach.">
+<meta itemprop="datePublished" content="2020-06-23T07:05:51+01:00" />
+<meta itemprop="dateModified" content="2020-06-23T07:05:51+01:00" />
+<meta itemprop="wordCount" content="493">
+
+
+
+<meta itemprop="keywords" content="" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[ASP.NET Core] Partial views – widoki częściowe"/>
+<meta name="twitter:description" content="Tworząc jakiś system prędzej czy później trafimy na taki widok w naszej aplikacji, który się powtarza w wielu miejscach. Czasami jest to dokładnie ten sam widok, z tymi samymi danymi, a czasami ten sam widok, ale z różnymi danymi.
+Żeby nie kopiować w wiele miejsc tego samego kodu, można użyć w ASP.NET CORE widoków częściowych, czyli partial views.
+Krótki opis Widok częściowy jest to kod, który można umieszczać w innych widokach."/>
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-06-23 07:05:51 &#43;0100 &#43;0100" />
+
+
+
+
+
+
+
+
+    </head>
+
+    <body class="">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">dotnet build</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#00994d;
+                   ">
             </span>
-        </div>
-        <ul class="menu" id="menu" onscroll="menu_on_scroll()">
-            <li>
-                <a href="https://tomaszprasolek.github.io/oblogu/">
-                    <span>
-                        O blogu
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a href="https://tomaszprasolek.github.io/omnie/">
-                    <span>
-                        O mnie
-                    </span>
-                </a>
-            </li></ul>
-    </nav>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="https://tomaszprasolek.github.io/omnie">o mnie</a></li><li><a href="https://tomaszprasolek.github.io/posts">wpisy</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
 </header>
 
-    <main class="main">
 
-<article class="post-single">
-  <header class="post-header">
-    <h1 class="post-title">
-      [ASP.NET Core] Partial views – widoki częściowe
-    </h1>
-    <div class="post-meta">June 23, 2020
+            <div class="content">
+                
+  <main class="post">
 
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
     </div>
-  </header> 
 
-  <div class="post-content">
-<p>Tworząc jakiś system prędzej czy później trafimy na taki widok w naszej aplikacji, który się powtarza w wielu miejscach. Czasami jest to dokładnie ten sam widok, z tymi samymi danymi, a czasami ten sam widok, ale z różnymi danymi.</p>
+    <article>
+      <h1 class="post-title">
+        <a href="https://tomaszprasolek.github.io/posts/aspnetcore-partialviews/">[ASP.NET Core] Partial views – widoki częściowe</a>
+      </h1>
+
+      
+
+      <div class="post-content">
+        <p>Tworząc jakiś system prędzej czy później trafimy na taki widok w naszej aplikacji, który się powtarza w wielu miejscach. Czasami jest to dokładnie ten sam widok, z tymi samymi danymi, a czasami ten sam widok, ale z różnymi danymi.</p>
 <p>Żeby nie kopiować w wiele miejsc tego samego kodu, można użyć w ASP.NET CORE widoków częściowych, czyli <strong>partial views</strong>.</p>
-<h1 id="krótki-opis">Krótki opis<a hidden class="anchor" aria-hidden="true" href="#krótki-opis">#</a></h1>
+<h1 id="krótki-opis">Krótki opis</h1>
 <p>Widok częściowy jest to kod, który można umieszczać w innych widokach. Takich widoków na jednej stronie możemy umieścić bardzo dużo :-) Pisząc <strong>widok</strong>, mam na myśli zarówno widoki z ASP.NET MVC (<code>views</code>), jak i strony (<code>pages</code>) z Razor Pages.</p>
 <p>Do czego może nam to się przydać:</p>
 <ul>
 <li>Na wielu stronach mamy informacje podane w tabeli. Układ tabeli jest zawsze taki sam, a zmieniają się na przykład dane.</li>
 <li>Komentarze na stronie – każdy komentarz to będzie wygenerowany widok częściowy.</li>
 </ul>
-<h1 id="cechy">Cechy<a hidden class="anchor" aria-hidden="true" href="#cechy">#</a></h1>
+<h1 id="cechy">Cechy</h1>
 <ul>
 <li>Nie zawiera logiki biznesowej.</li>
 <li>Trzeba do widoku częściowego przekazać jakieś dane.</li>
 <li>Przyjęta konwencja jest taka, że nazwy widoków częściowych zaczynają się od znaku podkreślenia <code>_</code> np. <code>_UsersTimeTable.cshtml.</code> Nie jest to wymagane, ale dzięki temu widać od razu, które widoki są częściowe, a które nie.</li>
 </ul>
 <p>W ASP.NET Core do dzielenia widoków na mniejsze części można jeszcze użyć <strong>ViewComponent</strong>. Po polsku to będzie komponent widoku? Trochę dziwnie to brzmi więc nie będę tego spolszczał :-) Główna różnica między ViewComponent, a Partial View jest taka, że ViewComponent może wykonać jakiś kod, nie zawiera tylko kodu Razor. Jest samodzielnym komponentem, który sam pobierze sobie niezbędne dane. Nie jest zależny od innych widoków. To tak w skrócie, może opiszę to jeszcze w innym poście.</p>
-<h1 id="przykład">Przykład<a hidden class="anchor" aria-hidden="true" href="#przykład">#</a></h1>
+<h1 id="przykład">Przykład</h1>
 <p>W mojej aplikacji na kilku stronach pokazuję czas gry użytkowników w różnym okresie: dzień, tydzień, miesiąc. Na każdej stronie pokazuje taką samą tabelkę:</p>
-<pre><code>@using ViewModels
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">@using ViewModels
 @model List&lt;UserTimeViewModel&gt;
 
-&lt;table class=&quot;table table-striped table-bordered &quot;&gt;
+&lt;table class=<span style="color:#e6db74">&#34;table table-striped table-bordered &#34;</span>&gt;
     &lt;thead&gt;
         &lt;tr&gt;
             &lt;th&gt;Użytkownik&lt;/th&gt;
@@ -141,7 +168,7 @@ Krótki opis Widok częściowy jest to kod, który można umieszczać w innych w
     &lt;/thead&gt;
     &lt;tbody&gt;
 
-        @foreach (var user in Model)
+        @foreach (<span style="color:#66d9ef">var</span> user <span style="color:#66d9ef">in</span> Model)
         {
             &lt;tr&gt;
                 &lt;td&gt;@user.UserName&lt;/td&gt;
@@ -150,81 +177,95 @@ Krótki opis Widok częściowy jest to kod, który można umieszczać w innych w
         }
     &lt;/tbody&gt;
 &lt;/table&gt;
-</code></pre><p>Widok częściowy w większości wygląda jak standardowy widok. Nie ma w w nim na początku deklaracji <code>@page</code> oraz sekcji z tytułem strony. Na początku widzimy deklarację <code>@using</code>, następnie z jakiego modelu korzysta, a potem już kod widoku.</p>
+</code></pre></div><p>Widok częściowy w większości wygląda jak standardowy widok. Nie ma w w nim na początku deklaracji <code>@page</code> oraz sekcji z tytułem strony. Na początku widzimy deklarację <code>@using</code>, następnie z jakiego modelu korzysta, a potem już kod widoku.</p>
 <p>Wywołanie takiego widoku wygląda tak:</p>
-<pre><code>@await Html.PartialAsync(&quot;_UsersTimeTable&quot;, Model.ViewModel)
-</code></pre><p>Pierwszy parametr to nazwa widoku, drugi to dane potrzebne widokowi.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">@await Html.PartialAsync(<span style="color:#e6db74">&#34;_UsersTimeTable&#34;</span>, Model.ViewModel)
+</code></pre></div><p>Pierwszy parametr to nazwa widoku, drugi to dane potrzebne widokowi.</p>
 <p>Ja w projekcie mam tylko jeden widok częściowy dlatego nazwę widoku wpisałem bez rozszerzenia i bez całej ścieżki do pliku. Mój widok znajduje się w tym samym katalogu, gdzie są widoki, które z niego korzystają.</p>
 <p>Co zrobić jeśli nasza aplikacja jest bardziej rozbudowana i mamy widoki o takich samych nazwach, ale znajdujące się w innych katalogach? Nic nie stoi na przeszkodzie, aby przekazać pełną ścieżkę do widoku, aby framework wiedział, którego widoku ma użyć.</p>
-<pre><code>@await Html.PartialAsync(&quot;~/Pages/Users/_UsersTimeTable.cshtml&quot;, 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">@await Html.PartialAsync(<span style="color:#e6db74">&#34;~/Pages/Users/_UsersTimeTable.cshtml&#34;</span>, 
 Model.ViewModel)
-</code></pre><p>Microsoft zaleca używania wywołania asynchronicznego. Jest jeszcze kilka sposobów na wywołanie widoku, jeśli jesteś ich ciekawe odsyłam do oficjalnej dokumentacji: <a href="https://docs.microsoft.com/pl-pl/aspnet/core/mvc/views/partial?view=aspnetcore-3.1#use-a-partial-view-in-a-markup-file">Partial views in ASP.NET Core</a>.</p>
-<h1 id="podsumowanie">Podsumowanie<a hidden class="anchor" aria-hidden="true" href="#podsumowanie">#</a></h1>
+</code></pre></div><p>Microsoft zaleca używania wywołania asynchronicznego. Jest jeszcze kilka sposobów na wywołanie widoku, jeśli jesteś ich ciekawe odsyłam do oficjalnej dokumentacji: <a href="https://docs.microsoft.com/pl-pl/aspnet/core/mvc/views/partial?view=aspnetcore-3.1#use-a-partial-view-in-a-markup-file">Partial views in ASP.NET Core</a>.</p>
+<h1 id="podsumowanie">Podsumowanie</h1>
 <p>I tyle :-)</p>
 <p>Można w łatwy sposób, bez powielania tego samego kodu na wielu stronach, pokazywać treść w taki sam sposób.</p>
 <p>Źródła:
 <a href="https://docs.microsoft.com/pl-pl/aspnet/core/mvc/views/partial?view=aspnetcore-3.1">https://docs.microsoft.com/pl-pl/aspnet/core/mvc/views/partial?view=aspnetcore-3.1</a></p>
 
-</div>
-  <footer class="post-footer">
-  </footer>
-</article>
-    </main><footer class="footer">
-    <span>&copy; 2020 <a href="https://tomaszprasolek.github.io/">tomaszprasolek.pl - BLOG</a></span>
-    <span>&middot;</span>
-    <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a></span>
-    <span>&middot;</span>
-    <span>Theme <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a></span>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        493 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-06-23 08:05
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2020</span>
+            
+            <span><a href="https://tomaszprasolek.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Tomasz Prasołek - Copyright 2020</span>
+          </div>
+    </div>
 </footer>
-<button class="top-link" id="top-link" type="button" aria-label="go to top" title="Go to Top" accesskey="g">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6">
-        <path d="M12 6H0l6-6z" /></svg>
-</button>
+
+            
+        </div>
+
+        
 
 
 
-<script defer src="https://tomaszprasolek.github.io/assets/js/highlight.min.27cd435cc9ed6abb4b496581b151804f79f366c412620272bb94e2f5f598ebcc.js" integrity="sha256-J81DXMntartLSWWBsVGAT3nzZsQSYgJyu5Ti9fWY68w="
-    onload="hljs.initHighlightingOnLoad();"></script>
-<script>
-    window.onload = function () {
-        if (localStorage.getItem("menu-scroll-position")) {
-            document.getElementById('menu').scrollLeft = localStorage.getItem("menu-scroll-position");
-        }
-    }
-    var mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-    mybutton.onclick = function () {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-        window.location.hash = ''
-    }
 
-    function menu_on_scroll() {
-        localStorage.setItem("menu-scroll-position", document.getElementById('menu').scrollLeft);
-    }
+<script type="text/javascript" src="/bundle.min.dc716e9092c9820b77f96da294d0120aeeb189b5bcea9752309ebea27fd53bbe6b13cffb2aca8ecf32525647ceb7001f76091de4199ac5a3caa432c070247f5b.js" integrity="sha512-3HFukJLJggt3&#43;W2ilNASCu6xibW86pdSMJ6&#43;on/VO75rE8/7KsqOzzJSVkfOtwAfdgkd5BmaxaPKpDLAcCR/Ww=="></script>
 
-</script>
-<script>
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
-            localStorage.setItem("pref-theme", 'light');
-        } else {
-            document.body.classList.add('dark');
-            localStorage.setItem("pref-theme", 'dark');
-        }
-    })
 
-</script>
 
-</body>
-
+    </body>
 </html>

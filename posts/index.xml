@@ -1,74 +1,530 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Posts on tomaszprasolek.pl - BLOG</title>
-    <link>https://tomaszprasolek.github.io/posts/</link>
-    <description>Recent content in Posts on tomaszprasolek.pl - BLOG</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>pl</language>
-    <lastBuildDate>Tue, 11 Aug 2020 06:36:23 +0100</lastBuildDate><atom:link href="https://tomaszprasolek.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Prywatny konstruktor – kiedy może się przydać?</title>
-      <link>https://tomaszprasolek.github.io/posts/prywatny-konstruktor/</link>
-      <pubDate>Tue, 11 Aug 2020 06:36:23 +0100</pubDate>
-      
-      <guid>https://tomaszprasolek.github.io/posts/prywatny-konstruktor/</guid>
-      <description>&lt;p&gt;W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Aplikacja LazyGit 692 dni później</title>
-      <link>https://tomaszprasolek.github.io/posts/lazygit-692dni-pozniej/</link>
-      <pubDate>Mon, 20 Jul 2020 06:52:21 +0100</pubDate>
-      
-      <guid>https://tomaszprasolek.github.io/posts/lazygit-692dni-pozniej/</guid>
-      <description>&lt;p&gt;Prawie 2 lata temu opublikowałem na blogu recenzję aplikacji LazyGit. Wtedy była ona dopiero 3 miesiące po wypuszczeniu i miała sporo braków. Nie dało się z nią pracować.&lt;/p&gt;
+    <channel>
+        <title>Posts on Blog o programowaniu</title>
+        <link>https://tomaszprasolek.github.io/posts/</link>
+        <description>Recent content in Posts on Blog o programowaniu</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>pl-PL</language>
+        <lastBuildDate>Tue, 11 Aug 2020 06:36:23 +0100</lastBuildDate>
+        <atom:link href="https://tomaszprasolek.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>Prywatny konstruktor – kiedy może się przydać?</title>
+            <link>https://tomaszprasolek.github.io/posts/prywatny-konstruktor/</link>
+            <pubDate>Tue, 11 Aug 2020 06:36:23 +0100</pubDate>
+            
+            <guid>https://tomaszprasolek.github.io/posts/prywatny-konstruktor/</guid>
+            <description>&lt;p&gt;W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów.&lt;/p&gt;</description>
+            <content type="html"><![CDATA[<p>W tym wpisie opowiem Ci jak użyć konstruktor prywatny do stworzenia obiektu z od razu prawidłowymi danymi, bez potrzeby robienia walidacji parametrów.</p>
+<h1 id="gra-karciania-gameover">Gra karciania “GameOver”</h1>
+<p><img src="/game_over_gra.jpg" alt="Image"></p>
+<p>W domu gramy trochę w gry planszowe i karciane. W ramach zabawy i poznania frameworka Blazor postanowiłem zaprogramować grę “GameOver”. Jest to gra karciana wydana przez wydawnictwo <a href="https://nk.com.pl/">Nasza księgarnia</a>.</p>
+<p>Więcej o grze przeczytasz tutaj: <a href="https://nk.com.pl/game-over/2539/gra.html#.XzEWPogzZhE">https://nk.com.pl/game-over/2539/gra.html#.XzEWPogzZhE</a></p>
+<p>Gra jest już prawie na ukończeniu. Został do poprawy bug podczas napotkania smoka + drobne poprawki w interfejsie. Jak skończę ją pisać to opublikuję informację o tym.</p>
+<h1 id="obiekt-card">Obiekt Card</h1>
+<p>W swoim kodzie posiadam klasę <code>Card</code>, która odpowiada za pojedynczą kartę do gry. Taka karta może być różnego typu:</p>
+<p>Klucz
+Skrzynia ze skarbem danego gracza
+Wróg z którym się walczy
+Drzwi
+Smok – też to jest wróg, ale jego nie da się pokonać, dlatego dałem go jako oddzielny typ.
+Dodatkowo jeśli karta jest skrzynią, musimy określić, którego gracza to skrzynia. A jeśli karta to wróg, to musimy wiedzieć jaką ma broń. W każdym innym przypadku ważny jest tylko typ. Na początku klasę zaprojektowałem tak:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Card</span>
+{
+    <span style="color:#66d9ef">public</span> CardType Type { <span style="color:#66d9ef">get</span>; }
+    <span style="color:#66d9ef">public</span> PlayerType? ChestOwner { <span style="color:#66d9ef">get</span>; }
+    <span style="color:#66d9ef">public</span> Weapon? Weapon { <span style="color:#66d9ef">get</span>; }
+
+    <span style="color:#66d9ef">public</span> Card(CardType type)
+    {
+        Type = type;
+    }
+
+    <span style="color:#66d9ef">public</span> Card(CardType type, Weapon weapon)
+    {
+        Type = type;
+        Weapon = weapon;
+    }
+
+    <span style="color:#66d9ef">public</span> Card(CardType type, PlayerType chestOwner)
+    {
+        Type = type;
+        ChestOwner = chestOwner;
+    }
+}
+</code></pre></div><p><code>CardType</code>, <code>PlayerType</code> oraz <code>Weapon</code> to enumy.</p>
+<p>Klasa zawiera 3 konstruktory publiczne, które mają różne przeznaczenia. Pierwszy służy do stworzenia kart typu: smok, drzwi i klucz. Drugi do stworzenia karty wroga, a trzeci skrzyni gracza.</p>
+<p>Czy używając tych konstruktorów mógłbym stworzyć kartę skrzyni wraz z jakąś bronią? Oczywiście, że tak, jeśli użyłbym drugiego konstruktora.</p>
+<p>Można się przed tym zabezpieczyć sprawdzają jakie dane są przekazywane do konstruktora i np. wyrzucić wyjątek. Jednak jest lepsze rozwiązanie.</p>
+<h1 id="publiczne-statyczne-metody">Publiczne statyczne metody</h1>
+<p>Zamiast tego można zrobić odpowiednie metody statyczne tworzące obiekt. W tych metodach przekazujemy tylko te dane, które są niezbędne. Reszta jest ustawiania wewnątrz metody, dzięki temu nie można już pomylić parametrów. Moje metody tworzące wyglądają tak:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateCard(CardType type)
+{
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(type);
+}
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateChestCard(PlayerType owner)
+{
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(CardType.Chest, owner);
+}
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateEnemyCard(Weapon Weapon)
+{
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(CardType.Enemy, Weapon);
+}
+</code></pre></div><p><strong>Pierwszą</strong> zaletą tego rozwiązania jest to, że nie stworzymy już obiektu ze złymi właściwościami.</p>
+<ul>
+<li>W metodzie <code>CreateChestCard</code> przekazujemy tylko, który gracz będzie właścicielem skrzyni. Typ karty <code>Chest</code> znajduje się wewnątrz metody.</li>
+<li>W metodzie <code>CreateEnemyCard</code> przekazujemy tylko typ broni. Typ karty <code>Enemy</code> znajduje się wewnątrz metody.</li>
+</ul>
+<p><strong>Drugą</strong> zaletą jest to, że mamy jasno nazwane metody, widać od razu co robię. Nie musimy przeglądać parametrów konstruktora i czytać komentarzy, aby dowiedzieć się co on robi. Zwiększa się również czytelność kodu.</p>
+<h1 id="konstruktor-prywatny">Konstruktor prywatny</h1>
+<p>I tutaj właśnie wkraczają całe na biało <strong>konstruktory prywatne</strong>. Bo żeby stworzyć obiekt, trzeba użyć konstruktora, tak jak zrobiłem w przykładzie wyżej. Ale jeśli zostawimy je publiczne, to ktoś może z nich skorzystać i zrobić obiekt ze złymi parametrami. Po refaktoringu klasa <code>Card</code> wygląda następująco:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Card</span>
+{
+    <span style="color:#66d9ef">public</span> CardType Type { <span style="color:#66d9ef">get</span>; }
+    <span style="color:#66d9ef">public</span> PlayerType? ChestOwner { <span style="color:#66d9ef">get</span>; }
+    <span style="color:#66d9ef">public</span> Weapon? Weapon { <span style="color:#66d9ef">get</span>; }
+
+    <span style="color:#66d9ef">private</span> Card(CardType type)
+    {
+        Type = type;
+    }
+
+    <span style="color:#66d9ef">private</span> Card(CardType type, Weapon weapon)
+    {
+        Type = type;
+        Weapon = weapon;
+    }
+
+    <span style="color:#66d9ef">private</span> Card(CardType type, PlayerType chestOwner)
+    {
+        Type = type;
+        ChestOwner = chestOwner;
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateCard(CardType type)
+    {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(type);
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateChestCard(PlayerType owner)
+    {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(CardType.Chest, owner);
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Card CreateEnemyCard(Weapon Weapon)
+    {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Card(CardType.Enemy, Weapon);
+    }
+}
+</code></pre></div><p>Klasa zawiera teraz po 3:</p>
+<ul>
+<li>właściwości,</li>
+<li>prywatne konstruktory,</li>
+<li>publiczne statyczne metody, które służą do stworzenia obiektów.</li>
+</ul>
+<p>Oczywiście tej gry już nikt nie będzie zmieniał, mógłbym zostawić klasę <code>Card</code> w takiej postaci jak była na początku wpisu. Ale stwierdziłem, że to akurat jest idealne zastosowanie metod tworzących i dobry temat na wpis, więc postanowiłem zrefaktorować kod :-)</p>
+<h1 id="podsumowanie">Podsumowanie</h1>
+<p>W ten oto łatwy sposób, używając metod tworzących i konstruktorów prywatnych, można zabezpieczyć tworzenie obiektów. Od teraz już nikt (no chyba, że ktoś zmieni kod :-) ) nie stworzy nieprawidłowych obiektów kart.</p>]]></content>
+        </item>
+        
+        <item>
+            <title>Aplikacja LazyGit 692 dni później</title>
+            <link>https://tomaszprasolek.github.io/posts/lazygit-692dni-pozniej/</link>
+            <pubDate>Mon, 20 Jul 2020 06:52:21 +0100</pubDate>
+            
+            <guid>https://tomaszprasolek.github.io/posts/lazygit-692dni-pozniej/</guid>
+            <description>&lt;p&gt;Prawie 2 lata temu opublikowałem na blogu recenzję aplikacji LazyGit. Wtedy była ona dopiero 3 miesiące po wypuszczeniu i miała sporo braków. Nie dało się z nią pracować.&lt;/p&gt;
 &lt;p&gt;Ostatnio mi się przypomniało o niej i postanowiłem znowu dać jej szansę i moje wrażenia opisać na blogu. Od razu mogę powiedzieć, że jest &lt;strong&gt;dużo lepiej 👍&lt;/strong&gt;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Przeniesienie strony zrobionej w WordPress na inny serwer</title>
-      <link>https://tomaszprasolek.github.io/posts/przeniesienie-strony-wp/</link>
-      <pubDate>Sat, 18 Jul 2020 06:58:13 +0100</pubDate>
-      
-      <guid>https://tomaszprasolek.github.io/posts/przeniesienie-strony-wp/</guid>
-      <description>&lt;p&gt;Moja żona jest grafikiem i pomagam jej w ramach jej studia graficznego: &lt;a href=&#34;https://solovestudio.pl/&#34;&gt;https://solovestudio.pl/&lt;/a&gt; robić strony internetowe oparte o system zarządzania treścią WordPress. Gosia przygotowuje całą stronę od strony wizualnej, dla mnie zostają kwestie techniczne :-) Czyli na przykład przeniesienie jej z serwera testowego na serwer klienta.&lt;/p&gt;
+            <content type="html"><![CDATA[<p>Prawie 2 lata temu opublikowałem na blogu recenzję aplikacji LazyGit. Wtedy była ona dopiero 3 miesiące po wypuszczeniu i miała sporo braków. Nie dało się z nią pracować.</p>
+<p>Ostatnio mi się przypomniało o niej i postanowiłem znowu dać jej szansę i moje wrażenia opisać na blogu. Od razu mogę powiedzieć, że jest <strong>dużo lepiej 👍</strong>.</p>
+<h1 id="lazygit-kiedyś">LazyGit kiedyś</h1>
+<p>Testowałem LazyGit w sierpniu 2018 roku. Link do recenzji: <a href="https://poznajgita.pl/lazygit-program-do-obslugi-gita-dla-leniwych/">https://poznajgita.pl/lazygit-program-do-obslugi-gita-dla-leniwych/</a>. Jak wynika z mojego opisu to nie wytrzymałem z tą aplikacją całego dnia pracy. Zostawiłem ją po 4 godzinach testów :-) . Dość szybko.</p>
+<p>Jakie uwagi miałem wtedy:</p>
+<ul>
+<li>Problem ze scaleniem gałęzi.</li>
+<li>Nie można dodać naraz wszystkich plików do stage’a, wszystkie trzeba ręcznie “przeklikać”.</li>
+<li>Nie można zrobić <code>interactive rebase</code>.</li>
+<li>Scrollować można tylko po jednej linii.</li>
+</ul>
+<p>Czyli jak widać dość podstawowe polecenia (no może poza <code>interactive rebase</code> :-) ).</p>
+<h1 id="lazygit-teraz">LazyGit teraz</h1>
+<p>Teraz moje testy wydłużyły się :-) Używam LazyGit od tygodnia i działa bardzo dobrze. Wygląd aplikacji się nie zmienił. Wszystko to na co narzekałem we wpisie sprzed 2 lata działa. LazyGit wspiera już bardzo dużo opcji.</p>
+<p>Pisałem, że wcześniej można było scrollować tekst tylko po jednej linii. Teraz domyślnie scrolluje po 2 linie, ale w ustawieniach można to zmienić na dowolną wartość, która Nam pasuje.</p>
+<p>Wszystko co robię w konsoli mogę zrobić w aplikacji. Chociaż nie próbowałem jeszcze robić tego: <code>git merge --no-ff -e -m &quot;&quot; -</code> . Ale resztę na pewno mogę zrobić z aplikacji :-)</p>
+<p>Jedyne co na razie sprawia problemy z aplikacją to… skróty klawiszowe. Jest ich dużo. Różne akcje są jeśli wciśniemy a (małe a), a inna akcja jeśli A (wielkie A). Ale tak to jest z nowymi aplikacjami, zawsze na początku jest ciężko dopóki się nie nauczymy skrótów klawiszowych.</p>
+<p>Jakie opcje jeszcze oferuje aplikacja można obejrzeć na Youtube:</p>
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/CPLdltN7wgE" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+<h1 id="inne-aplikacje">Inne aplikacje</h1>
+<p>Wychodzi na to, że LazyGit zastąpi 3 aplikacje, które dotąd używałem:</p>
+<ul>
+<li><a href="https://git-scm.com/docs/gitk">Gitk</a> – GUI domyślnie instalowane wraz z GITem. Używałem tego jak musiałem przejrzeć historię projektu.</li>
+<li><a href="https://github.com/terrajobst/git-istage">git-istage</a> – aplikacja konsolowa służąca do dodawania plików do stage’a. Opisywałem ją w poście: <a href="https://poznajgita.pl/narzedzie-git-istage-dodawanie-plikow-do-stagea-lepsza-alternatywa-dla-polecenia-git-add-p/">https://poznajgita.pl/narzedzie-git-istage-dodawanie-plikow-do-stagea-lepsza-alternatywa-dla-polecenia-git-add-p/</a></li>
+<li><a href="https://github.com/tomaszprasolek/git-filestage">git-filestage</a> – bardzo prosta aplikacja konsolowa służąca do dodawania całych plików do stage’a oraz cofania zmian w nich.</li>
+</ul>
+<p>I może nawet zastąpi mi konsolę… To się jeszcze okaże, ale wychodzi na to, że w miarę jak będę poznawał jak działa LazyGit, tym mniej razy będę robił rzeczy z konsoli. Kiedyś myślałem, że żadna aplikacja nie zastąpi mi konsoli, teraz już nie jestem tego pewien 🙂 Pożyjemy, zobaczymy.</p>
+<h1 id="podsumowanie">Podsumowanie</h1>
+<p>LazyGit jest obecnie pełnoprawną aplikacją do obsługi systemu kontroli wersji Git. Obsługuje bardzo dużo poleceń. Jest czytelny i co dla mnie najważniejsze – odpalany jest w konsoli. A konsolę mam zawsze pod ręką, a dokładniej pod skrótem CTRL + ~. Dzięki temu po napisaniu kodu nie muszę odrywać rąk od klawiatury, aby zrobić commit.</p>
+<p><strong>Zdecydowanie polecam aplikację LazyGit.</strong></p>
+<p>Źródło: <a href="https://github.com/jesseduffield/lazygit">https://github.com/jesseduffield/lazygit</a></p>]]></content>
+        </item>
+        
+        <item>
+            <title>Przeniesienie strony zrobionej w WordPress na inny serwer</title>
+            <link>https://tomaszprasolek.github.io/posts/przeniesienie-strony-wp/</link>
+            <pubDate>Sat, 18 Jul 2020 06:58:13 +0100</pubDate>
+            
+            <guid>https://tomaszprasolek.github.io/posts/przeniesienie-strony-wp/</guid>
+            <description>&lt;p&gt;Moja żona jest grafikiem i pomagam jej w ramach jej studia graficznego: &lt;a href=&#34;https://solovestudio.pl/&#34;&gt;https://solovestudio.pl/&lt;/a&gt; robić strony internetowe oparte o system zarządzania treścią WordPress. Gosia przygotowuje całą stronę od strony wizualnej, dla mnie zostają kwestie techniczne :-) Czyli na przykład przeniesienie jej z serwera testowego na serwer klienta.&lt;/p&gt;
 &lt;p&gt;W tym wpisie pokażę jak to zrobić. Będzie to ogólny opis procesu. Nie będzie szczegółów jak działa program FileZilla do połączenia z serwerem FTP, jak zainstalować narzędzie Search-Replace-DB. Te informacje można znaleźć w internecie. Będzie to ogólny opis kroków jakie trzeba wykonać aby przenieść stronę z jednego serwera na drugi.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>[ASP.NET Core] Partial views – widoki częściowe</title>
-      <link>https://tomaszprasolek.github.io/posts/aspnetcore-partialviews/</link>
-      <pubDate>Tue, 23 Jun 2020 07:05:51 +0100</pubDate>
-      
-      <guid>https://tomaszprasolek.github.io/posts/aspnetcore-partialviews/</guid>
-      <description>Tworząc jakiś system prędzej czy później trafimy na taki widok w naszej aplikacji, który się powtarza w wielu miejscach. Czasami jest to dokładnie ten sam widok, z tymi samymi danymi, a czasami ten sam widok, ale z różnymi danymi.
+            <content type="html"><![CDATA[<p>Moja żona jest grafikiem i pomagam jej w ramach jej studia graficznego: <a href="https://solovestudio.pl/">https://solovestudio.pl/</a> robić strony internetowe oparte o system zarządzania treścią WordPress. Gosia przygotowuje całą stronę od strony wizualnej, dla mnie zostają kwestie techniczne :-) Czyli na przykład przeniesienie jej z serwera testowego na serwer klienta.</p>
+<p>W tym wpisie pokażę jak to zrobić. Będzie to ogólny opis procesu. Nie będzie szczegółów jak działa program FileZilla do połączenia z serwerem FTP, jak zainstalować narzędzie Search-Replace-DB. Te informacje można znaleźć w internecie. Będzie to ogólny opis kroków jakie trzeba wykonać aby przenieść stronę z jednego serwera na drugi.</p>
+<h1 id="wstęp">Wstęp</h1>
+<p>Inne powody do przeniesienia strony na inny serwer mogą być takie:</p>
+<ul>
+<li>Obecny serwer wolno działa.</li>
+<li>Jest super promocja u innego hostingodawcy :-)</li>
+</ul>
+<p>Z czego składa się strona internetowa zrobiona przy pomocy systemu WordPress? Z plików tworzących szablon strony, czyli plików o rozszerzeniach: php, js, css, różne grafiki i inne. Treść strony + różne ustawienia zapisane są w bazie danych MySQL.</p>
+<p>Czyli trzeba przenieść na serwer docelowy pliki i bazę MySQL.</p>
+<p><strong>Ważne! Jeśli przenosimy stronę na inną domenę, to trzeba w bazie zmienić wszystkie wpisy nazwy starej domeny na nową.</strong></p>
+<p>W naszym przypadku testowa strona była pod adresem: <a href="http://serwer1966453.home.pl/autoinstalator/wordpress/,">http://serwer1966453.home.pl/autoinstalator/wordpress/,</a> a my przenosimy go na <a href="https://ispeakacademy.pl/">https://ispeakacademy.pl/</a>.</p>
+<p>To znaczy, że wszystkie wpisy w bazie zawierające adres strony testowej trzeba zamienić na nazwę domeny klienta. Oczywiście nie trzeba tego robić ręcznie, są do tego narzędzia. Ale o tym napiszę później.</p>
+<p>Zacznijmy od początku.</p>
+<h1 id="przygotowanie">Przygotowanie</h1>
+<p>Na początku musimy od razu na serwerze docelowym stworzyć nową bazę danych MySQL wraz z nowym użytkownikiem. Trzeba nadać temu użytkownikowi wszystkie uprawnienia do tejże bazy.</p>
+<p>Korzystałem z kilku hostingów i w każdym te rzeczy można zrobić bez problemu z panelu klienta.</p>
+<p>Zapisz sobie gdzieś:</p>
+<ul>
+<li>Nazwę nowej bazy danych.</li>
+<li>Nazwę użytkownika.</li>
+<li>Hasło użytkownika do bazy.</li>
+</ul>
+<p>Przyda Ci się to w kolejnych krokach.</p>
+<h1 id="pliki">Pliki</h1>
+<p>Najpierw zajmiemy się plikami. Najlepiej ściągnąć je do siebie jakimś programem, który obsługuje FTP (File Tranfer Protocol). Ja używam i polecam <a href="https://filezilla-project.org/">FileZilla</a>. Dane do logowania do konta FTP powinniśmy dostać emailem podczas zakupu hostingu. Jeśli nie dostaliśmy, to takie konto można założyć w panelu klienta u hostingodawcy.</p>
+<p>Podłączamy się do serwera i wybieramy katalog gdzie leży strona, przeważnie ten katalog nazywa się <code>public_html</code>. Ściągamy wszystko na nasz komputer. Tych plików może być nawet kilkanaście tysięcy, więc chwilę się zejdzie :-)</p>
+<p>Trzeba w plikach dokonać jednej zmiany. W pliku <code>wp-config.php</code> musimy zmienić dane starej bazy danych na nową. Na tą bazę, którą utworzyliśmy na samym początku. Zmieniamy następujące rzeczy</p>
+<ul>
+<li>Nazwę bazy danych.</li>
+<li>Nazwę użytkownika.</li>
+<li>Hasło użytkownika do bazy.</li>
+</ul>
+<pre><code>// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define('DB_NAME', 'db_name');
+
+/** MySQL database username */
+define('DB_USER', 'username');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'password');
+
+/** MySQL hostname */
+define('DB_HOST', 'localhost');
+</code></pre><p>Następnie łączymy się na docelowy serwer gdzie chcemy naszą stronę umieścić i wrzucamy tam wszystkie pliki.</p>
+<p>Ja już pisałem wcześniej, plików może być dużo. Przeważnie szybkość przesyłania danych na serwer jest wolniejsza niż ściąganie danych, więc w tym przypadku zejdzie się trochę dłużej.</p>
+<h1 id="baza-danych-mysql">Baza danych MySQL</h1>
+<p>Chyba wszyscy hostingodawcy umożliwiają dostęp do bazy przez aplikację <a href="https://www.phpmyadmin.net/">phpMyAdmin</a>. Uruchamiamy ją na serwerze źródłowym. Z listy po lewej wybieramy bazę danych, którą chcemy wyeksportować. Klikamy opcję Eksportuj, wybieramy metodę eksportu “Szybko – wyświetlane są tylko minimalne opcje” i naciskamy “Wykonaj”. Plik z rozszerzeniem .sql zapisujemy na dysku.</p>
+<p><strong>Uwaga! Wersje aplikacji phpMyAdmin mogą się różnić, więc nie zdziw się jeśli u Ciebie opcje, które opisałem powyżej będą inne.</strong></p>
+<p>Następnie logujemy się do aplikacji phpMyAdmin na serwerze docelowym. Wybieramy bazę, do której chcemy zaimportować dane i wybieramy opcję “Importuj”. Wybieramy wcześniej zapisany plik .sql i już :-)</p>
+<h1 id="zamiana-nazwy-domeny-w-bazie">Zamiana nazwy domeny w bazie</h1>
+<p>Ostatni krok: zamiana w bazie nazwy starej domeny na nową. Do tego użyjemy narzędzia Search-Replace-DB. Służy ono właśnie do zamiany tekstu w bazie danych. Przeszukuje wszystkie tabele podanej bazy danych i zamienia wyszukany tekst, na tekst który chcemy.</p>
+<p>Można go ściągnąć bezpośrednio z GitHuba: <a href="https://github.com/interconnectit/Search-Replace-DB/releases/tag/4.1.2">https://github.com/interconnectit/Search-Replace-DB/releases/tag/4.1.2</a>.</p>
+<p>W naszym przypadku adres serwera testowego był taki:</p>
+<pre><code>https://serwer1966453.home.pl/autoinstalator/wordpress
+</code></pre><p>I musiałem go zamienić na:</p>
+<pre><code>https://ispeakacademy.pl
+</code></pre><p>Wpisuję w aplikacji, że chcę zamienić jedno na drugie i naciskam <strong>Dry-run</strong>. Ta opcja zadziała “na sucho”, czyli przeszuka wszystkie tabele i pokaże w który występuje wyszukiwana fraza. W tym trybie nic w bazie nie zostanie zmienione. Jest to bardzo przydatna opcja, ja z niej zawsze korzystam. Po chwili pokaże się podsumowanie w jakich tabelach została znaleziona wyszukiwana fraza i ile razy. Można również podejrzeć, gdzie wyszukiwana fraza znajduje się w tekście w bazie.</p>
+<p>Trzeba pamiętać, aby zamienić różne wersje domeny:</p>
+<ul>
+<li>Zabezpieczona https
+<ul>
+<li><code>https://serwer1966453.home.pl/autoinstalator/wordpress</code> na <code>https://ispeakacademy.pl</code></li>
+</ul>
+</li>
+<li>Niezabezpieczona, czyli tylko http
+<ul>
+<li><code>http://serwer1966453.home.pl/autoinstalator/wordpress</code> na <code>https://ispeakacademy.pl</code></li>
+</ul>
+</li>
+<li>Bez przedrostka http
+<ul>
+<li><code>serwer1966453.home.pl/autoinstalator/wordpress</code> na <code>ispeakacademy.pl</code></li>
+</ul>
+</li>
+</ul>
+<p>Jeśli jesteśmy pewni, że chcemy zmienić wpisany tekst w bazie, to klikamy <strong>Run live</strong>. Przy obu opcjach jest podsumowanie jakie tabele były przeszukiwane i w których znaleziono teksty do zmiany.</p>
+<p>Opcja dry-run jest idealna, aby sprawdzać czy tekst, który powinniśmy zmienić nie został jeszcze w bazie.</p>
+<p>Na koniec dobrze jest jeszcze wpisać samą nazwę domeny i zobaczyć, co znajdzie. U mnie znalazło takie coś:</p>
+<pre><code>serwer1966453.home.pl\/autoinstalator\/wordpress
+</code></pre><p>I to też zmieniłem :-)</p>
+<h1 id="podsumowanie">Podsumowanie</h1>
+<p>Aby przenieść stronę zrobioną w WordPress na inny serwer trzeba zrobić 3 kroki:</p>
+<ul>
+<li>Przenieść pliki.</li>
+<li>Przenieść bazę danych MySQL.</li>
+<li>Opcjonalnie zmienić w bazię nazwę domeny na nową.</li>
+</ul>
+<p>I to tyle :-) Mam nadzieję, że ten wpis Ci pomógł przenieść Twoją lub kogoś innego stronę na nowy serwer.</p>]]></content>
+        </item>
+        
+        <item>
+            <title>[ASP.NET Core] Partial views – widoki częściowe</title>
+            <link>https://tomaszprasolek.github.io/posts/aspnetcore-partialviews/</link>
+            <pubDate>Tue, 23 Jun 2020 07:05:51 +0100</pubDate>
+            
+            <guid>https://tomaszprasolek.github.io/posts/aspnetcore-partialviews/</guid>
+            <description>Tworząc jakiś system prędzej czy później trafimy na taki widok w naszej aplikacji, który się powtarza w wielu miejscach. Czasami jest to dokładnie ten sam widok, z tymi samymi danymi, a czasami ten sam widok, ale z różnymi danymi.
 Żeby nie kopiować w wiele miejsc tego samego kodu, można użyć w ASP.NET CORE widoków częściowych, czyli partial views.
 Krótki opis Widok częściowy jest to kod, który można umieszczać w innych widokach.</description>
-    </item>
-    
-    <item>
-      <title>[ASP.NET Core] TypeConverter zamiast IModelBinder</title>
-      <link>https://tomaszprasolek.github.io/posts/aspnetcore-typeconverter/</link>
-      <pubDate>Mon, 15 Jun 2020 07:11:48 +0100</pubDate>
-      
-      <guid>https://tomaszprasolek.github.io/posts/aspnetcore-typeconverter/</guid>
-      <description>W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.
+            <content type="html"><![CDATA[<p>Tworząc jakiś system prędzej czy później trafimy na taki widok w naszej aplikacji, który się powtarza w wielu miejscach. Czasami jest to dokładnie ten sam widok, z tymi samymi danymi, a czasami ten sam widok, ale z różnymi danymi.</p>
+<p>Żeby nie kopiować w wiele miejsc tego samego kodu, można użyć w ASP.NET CORE widoków częściowych, czyli <strong>partial views</strong>.</p>
+<h1 id="krótki-opis">Krótki opis</h1>
+<p>Widok częściowy jest to kod, który można umieszczać w innych widokach. Takich widoków na jednej stronie możemy umieścić bardzo dużo :-) Pisząc <strong>widok</strong>, mam na myśli zarówno widoki z ASP.NET MVC (<code>views</code>), jak i strony (<code>pages</code>) z Razor Pages.</p>
+<p>Do czego może nam to się przydać:</p>
+<ul>
+<li>Na wielu stronach mamy informacje podane w tabeli. Układ tabeli jest zawsze taki sam, a zmieniają się na przykład dane.</li>
+<li>Komentarze na stronie – każdy komentarz to będzie wygenerowany widok częściowy.</li>
+</ul>
+<h1 id="cechy">Cechy</h1>
+<ul>
+<li>Nie zawiera logiki biznesowej.</li>
+<li>Trzeba do widoku częściowego przekazać jakieś dane.</li>
+<li>Przyjęta konwencja jest taka, że nazwy widoków częściowych zaczynają się od znaku podkreślenia <code>_</code> np. <code>_UsersTimeTable.cshtml.</code> Nie jest to wymagane, ale dzięki temu widać od razu, które widoki są częściowe, a które nie.</li>
+</ul>
+<p>W ASP.NET Core do dzielenia widoków na mniejsze części można jeszcze użyć <strong>ViewComponent</strong>. Po polsku to będzie komponent widoku? Trochę dziwnie to brzmi więc nie będę tego spolszczał :-) Główna różnica między ViewComponent, a Partial View jest taka, że ViewComponent może wykonać jakiś kod, nie zawiera tylko kodu Razor. Jest samodzielnym komponentem, który sam pobierze sobie niezbędne dane. Nie jest zależny od innych widoków. To tak w skrócie, może opiszę to jeszcze w innym poście.</p>
+<h1 id="przykład">Przykład</h1>
+<p>W mojej aplikacji na kilku stronach pokazuję czas gry użytkowników w różnym okresie: dzień, tydzień, miesiąc. Na każdej stronie pokazuje taką samą tabelkę:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">@using ViewModels
+@model List&lt;UserTimeViewModel&gt;
+
+&lt;table class=<span style="color:#e6db74">&#34;table table-striped table-bordered &#34;</span>&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Użytkownik&lt;/th&gt;
+            &lt;th&gt;Czas gry [hh/mm/ss]&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+
+        @foreach (<span style="color:#66d9ef">var</span> user <span style="color:#66d9ef">in</span> Model)
+        {
+            &lt;tr&gt;
+                &lt;td&gt;@user.UserName&lt;/td&gt;
+                &lt;td&gt;@user.PlayTimeFriendlyString&lt;/td&gt;
+            &lt;/tr&gt;
+        }
+    &lt;/tbody&gt;
+&lt;/table&gt;
+</code></pre></div><p>Widok częściowy w większości wygląda jak standardowy widok. Nie ma w w nim na początku deklaracji <code>@page</code> oraz sekcji z tytułem strony. Na początku widzimy deklarację <code>@using</code>, następnie z jakiego modelu korzysta, a potem już kod widoku.</p>
+<p>Wywołanie takiego widoku wygląda tak:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">@await Html.PartialAsync(<span style="color:#e6db74">&#34;_UsersTimeTable&#34;</span>, Model.ViewModel)
+</code></pre></div><p>Pierwszy parametr to nazwa widoku, drugi to dane potrzebne widokowi.</p>
+<p>Ja w projekcie mam tylko jeden widok częściowy dlatego nazwę widoku wpisałem bez rozszerzenia i bez całej ścieżki do pliku. Mój widok znajduje się w tym samym katalogu, gdzie są widoki, które z niego korzystają.</p>
+<p>Co zrobić jeśli nasza aplikacja jest bardziej rozbudowana i mamy widoki o takich samych nazwach, ale znajdujące się w innych katalogach? Nic nie stoi na przeszkodzie, aby przekazać pełną ścieżkę do widoku, aby framework wiedział, którego widoku ma użyć.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">@await Html.PartialAsync(<span style="color:#e6db74">&#34;~/Pages/Users/_UsersTimeTable.cshtml&#34;</span>, 
+Model.ViewModel)
+</code></pre></div><p>Microsoft zaleca używania wywołania asynchronicznego. Jest jeszcze kilka sposobów na wywołanie widoku, jeśli jesteś ich ciekawe odsyłam do oficjalnej dokumentacji: <a href="https://docs.microsoft.com/pl-pl/aspnet/core/mvc/views/partial?view=aspnetcore-3.1#use-a-partial-view-in-a-markup-file">Partial views in ASP.NET Core</a>.</p>
+<h1 id="podsumowanie">Podsumowanie</h1>
+<p>I tyle :-)</p>
+<p>Można w łatwy sposób, bez powielania tego samego kodu na wielu stronach, pokazywać treść w taki sam sposób.</p>
+<p>Źródła:
+<a href="https://docs.microsoft.com/pl-pl/aspnet/core/mvc/views/partial?view=aspnetcore-3.1">https://docs.microsoft.com/pl-pl/aspnet/core/mvc/views/partial?view=aspnetcore-3.1</a></p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>[ASP.NET Core] TypeConverter zamiast IModelBinder</title>
+            <link>https://tomaszprasolek.github.io/posts/aspnetcore-typeconverter/</link>
+            <pubDate>Mon, 15 Jun 2020 07:11:48 +0100</pubDate>
+            
+            <guid>https://tomaszprasolek.github.io/posts/aspnetcore-typeconverter/</guid>
+            <description>W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.
 Użyłem do wyboru tygodnia standardowego znacznika HTML:
-&amp;lt;input type=&amp;quot;week&amp;quot;&amp;gt; Opis problemu Ten znacznik przesyła dane w postaci 2020-W24, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę Week.
+&amp;lt;input type=&amp;#34;week&amp;#34;&amp;gt; Opis problemu Ten znacznik przesyła dane w postaci 2020-W24, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę Week.
 Zawiera ona jeden konstruktor:
 public Week(int year, int week) { Year = year; WeekNr = week; } Przeciążyłem metodę ToString, aby zwracało informacje w formacie z kontrolki &amp;lt;input type=&amp;quot;week&amp;quot;&amp;gt;</description>
-    </item>
-    
-    <item>
-      <title>Serilog – jak filtrować logi?</title>
-      <link>https://tomaszprasolek.github.io/posts/2020-05-28-serilog-filtrowanie/</link>
-      <pubDate>Thu, 28 May 2020 07:27:51 +0100</pubDate>
-      
-      <guid>https://tomaszprasolek.github.io/posts/2020-05-28-serilog-filtrowanie/</guid>
-      <description>Ostatnio w moim jednym pet projekcie (pisany w ASP.NET Core 3.1.) wymyśliłem sobie tak, aby do bazy zapisywane były tylko te logi, które:
+            <content type="html"><![CDATA[<p>W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.</p>
+<p><img src="/TypeConverter_WygladKontrolki.png" alt="Image"></p>
+<p>Użyłem do wyboru tygodnia standardowego znacznika HTML:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;week&#34;</span>&gt;
+</code></pre></div><h1 id="opis-problemu">Opis problemu</h1>
+<p>Ten znacznik przesyła dane w postaci <code>2020-W24</code>, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę <code>Week</code>.</p>
+<p>Zawiera ona jeden konstruktor:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> Week(<span style="color:#66d9ef">int</span> year, <span style="color:#66d9ef">int</span> week)
+{
+    Year = year;
+    WeekNr = week;
+}
+</code></pre></div><p>Przeciążyłem metodę ToString, aby zwracało informacje w formacie z kontrolki <code>&lt;input type=&quot;week&quot;&gt;</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
+{
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">$&#34;{Year}-W{WeekNr}&#34;</span>;
+}
+</code></pre></div><p>Zawiera jeszcze kilka metod pomocniczych:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> DateTime GetFirstDayOfWeek()
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Week GetCurrentWeek()
+<span style="color:#66d9ef">public</span> Week GetNextWeek()
+<span style="color:#66d9ef">public</span> Week GetPreviousWeek()
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> GetDaysInWeekPeriod()
+</code></pre></div><p>Wszystko spoko działa :-) Tylko za każdym razem jak przesyłam dane z formularza, to muszę stringa z informacją o tygodniu i roku przekształcać na obiekt <code>Week</code>. Chciałbym aby automatycznie to się robiło.</p>
+<p>Ucząc się podstaw ASP.NET Core czytałem oczywiście o czymś taki jak bindowanie danych. Framework sam konwertuje teksty na odpowiedni typ, dzięki temu programista już nie musi się o to martwić. Skoro takie coś istnieje, to pomyślałem, że pewnie da się jakąś własną klasę napisać, która zamieni przychodzący tekst na obiekt <code>Week</code>.</p>
+<p>Zacząłem googlować <strong>custom model binding</strong> i trafiłem na artykuł <a href="https://docs.microsoft.com/pl-pl/aspnet/core/mvc/advanced/custom-model-binding?view=aspnetcore-3.1">Custom Model Binding in ASP.NET Core</a> z oficjalnej dokumentacji. Jest tam napisane jak zrobić własne bindowanie do własnego modelu.</p>
+<p>Już zacząłem to robić. Dodałem klasę, która implementowała interfejs <code>IModelBinder</code>, ale na szczęście doczytałem artykuł do końca :-)</p>
+<p>Disclaimer: Czasami zdarza mi się, że szybko chce coś zrobić i przeglądam tylko kod kopiuje go do siebie, a potem się denerwuje, że coś nie działa. Okazuje się, że coś pominę i nie doczytam… i nie działa.</p>
+<p>Na końcu jest napisane:</p>
+<blockquote>
+<p>Typically shouldn’t be used to convert a string into a custom type, a TypeConverter is usually a better option.</p>
+</blockquote>
+<h1 id="użycie-typeconverter-zamiast-imodelbinder">Użycie TypeConverter zamiast IModelBinder</h1>
+<p>I tak zrobiłem :-) I wszystko działa i wydaje się nawet, że jest to prostsze rozwiązanie. Co musiałem zrobić?</p>
+<p>Dodać klasę <code>WeekConverter</code>, która dziedziczy po klasie <code>TypeConverter</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WeekConverter</span> : TypeConverter
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">bool</span> CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+    {
+        <span style="color:#66d9ef">if</span> (sourceType == <span style="color:#66d9ef">typeof</span>(<span style="color:#66d9ef">string</span>))
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">base</span>.CanConvertFrom(context, sourceType);
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">object</span> ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, <span style="color:#66d9ef">object</span> <span style="color:#66d9ef">value</span>)
+    {
+        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">value</span> <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">string</span> isoWeek)
+        {
+            <span style="color:#66d9ef">var</span> result = isoWeek.Split(<span style="color:#e6db74">&#34;-W&#34;</span>);
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Week(Convert.ToInt32(result[<span style="color:#ae81ff">0</span>]), Convert.ToInt32(result[<span style="color:#ae81ff">1</span>]));
+        }
+
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">base</span>.ConvertFrom(context, culture, <span style="color:#66d9ef">value</span>);
+    }
+}
+</code></pre></div><p>Zaimplementowałem tylko 2 metody, których potrzebuję:</p>
+<ul>
+<li>CanConvertFrom</li>
+<li>ConvertFrom</li>
+</ul>
+<p>TypeConverter konweruje w 2 strony ale mi tylko była potrzebna konwersja z typu <code>string</code> do <code>Week</code>.</p>
+<p>Dodatkowo klasę <code>Week</code> musiałem oznaczyć atrybutem:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#a6e22e">[TypeConverter(typeof(WeekConverter))]</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Week</span>
+</code></pre></div><p>W metodzie oczywiście zmieniłem typ na <code>Week</code> + parę drobnych poprawek i już :-) I tylko tyle :-) Wszystko już działa.</p>
+<p>Z formularza na stronie dostaję od razu obiekt <code>Week</code>, a nie <code>string</code>.</p>
+<h1 id="podsumowanie">Podsumowanie</h1>
+<p>Jeśli możesz używaj <strong>TypeConverter</strong> zamiast własnego bindowania modelu. Czytaj dokumentację i artykuły do końca, mogą się tam znajdować ważne informacje.</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Serilog – jak filtrować logi?</title>
+            <link>https://tomaszprasolek.github.io/posts/2020-05-28-serilog-filtrowanie/</link>
+            <pubDate>Thu, 28 May 2020 07:27:51 +0100</pubDate>
+            
+            <guid>https://tomaszprasolek.github.io/posts/2020-05-28-serilog-filtrowanie/</guid>
+            <description>Ostatnio w moim jednym pet projekcie (pisany w ASP.NET Core 3.1.) wymyśliłem sobie tak, aby do bazy zapisywane były tylko te logi, które:
  W polu SourceContext zawieraja się namespace aplikacji lub Pole @Exception nie jest puste.  Chciałem do bazy zapisywać tylko błędy oraz moje logi z aplikacji, żeby widzieć jak aplikacja działa. Zapisuję tylko to, bo do tych błędów będą miał zrobioną na stronie oddzielną podstronę do ich przeglądania.</description>
-    </item>
-    
-  </channel>
+            <content type="html"><![CDATA[<p>Ostatnio w moim jednym pet projekcie (pisany w ASP.NET Core 3.1.) wymyśliłem sobie tak, aby do bazy zapisywane były tylko te logi, które:</p>
+<ul>
+<li>W polu <code>SourceContext</code> zawieraja się namespace aplikacji lub</li>
+<li>Pole <code>@Exception</code> nie jest puste.</li>
+</ul>
+<p>Chciałem do bazy zapisywać tylko błędy oraz moje logi z aplikacji, żeby widzieć jak aplikacja działa. Zapisuję tylko to, bo do tych błędów będą miał zrobioną na stronie oddzielną podstronę do ich przeglądania. Chciałem aby na tej podstronie były tylko logi, które mnie interesują, żebym nie musiał przeszukiwać dużej liczby.</p>
+<h1 id="jak-to-zrobić">Jak to zrobić?</h1>
+<p>Trzeba doinstalować nugeta <strong>Serilog.Filters.Expression</strong>:</p>
+<pre><code>dotnet add package Serilog.Filters.Expressions
+</code></pre><p>I już można korzystać z filtrów. Są dwie opcje filtrowania:</p>
+<ul>
+<li>ByIncludingOnly</li>
+<li>ByExcluding</li>
+</ul>
+<p>Pewnie znasz angielski, więc możesz się domyślić, że <code>ByIncludingOnly</code> uwzględnia te logi i przekazuje je do odpowiedniego zlewu :-) , a <code>ByExcluding</code> wyklucza i nie zapisuje do loga.</p>
+<p>Składnia pisania warunków jest bardzo podobna do składni SQL.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Category</th>
+<th style="text-align:left">Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Literals</strong></td>
+<td style="text-align:left"><code>123</code>, <code>123.4</code>, <code>'Hello'</code>, <code>true</code>, <code>false</code>, <code>null</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Properties</strong></td>
+<td style="text-align:left"><code>A</code>, <code>A.B</code>, <code>@Level</code>, <code>@Timestamp</code>, <code>@Exception</code>, <code>@Message</code>, <code>@MessageTemplate</code>, <code>@Properties['A-b-c']</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Comparisons</strong></td>
+<td style="text-align:left"><code>A = B</code>, <code>A &lt;&gt; B</code>, <code>A &gt; B</code>, <code>A &gt;= B</code>, <code>A is null</code>, <code>A is not null</code>, <code>A in [1, 2]</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Text</strong></td>
+<td style="text-align:left"><code>A like 'H%'</code>, <code>A not like 'H%'</code>, <code>A like 'Hel_o'</code>, <code>Contains(A, 'H')</code>, <code>StartsWith(A, 'H')</code>, <code>EndsWith(A, 'H')</code>, <code>IndexOf(A, 'H')</code>, <code>Length(A)</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Regular expressions</strong></td>
+<td style="text-align:left"><code>A = /H.*o/</code>, <code>Contains(A, /[lL]/)</code>, other string functions</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Collections</strong></td>
+<td style="text-align:left"><code>A[0] = 'Hello'</code>, <code>A[?] = 'Hello'</code> (any), <code>StartsWith(A[*], 'H')</code> (all), <code>Length(A)</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Maths</strong></td>
+<td style="text-align:left"><code>A + 2</code>, <code>A - 2</code>, <code>A * 2</code>, <code>A % 2</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Logic</strong></td>
+<td style="text-align:left"><code>not A</code>, <code>A and B</code>, <code>A or B</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Grouping</strong></td>
+<td style="text-align:left"><code>A * (B + C)</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Other</strong></td>
+<td style="text-align:left"><code>Has(A)</code>, <code>TypeOf(A)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Tabelkę “zakosiłem” z oficjalnej dokumentacji :-)</p>
+<h1 id="przykład">Przykład</h1>
+<p>Jak to wygląda u mnie? A no tak:</p>
+<pre><code>StartsWith(@Properties['SourceContext'] , 'MyNamespace') or @Exception is not null
+</code></pre><p>A tutaj wklejam kawałek mojego pliku kofiguracyjnego:</p>
+<pre><code>[...]
+
+&quot;WriteTo&quot;: [
+  {
+    &quot;Name&quot;: &quot;MSSqlServer&quot;,
+    &quot;Args&quot;: {
+      &quot;connectionString&quot;: &quot;MyConnectionString&quot;,
+      &quot;tableName&quot;: &quot;Log&quot;
+    }
+  }
+],
+&quot;Filter&quot;: [
+  {
+    &quot;Name&quot;: &quot;ByIncludingOnly&quot;,
+    &quot;Args&quot;: { &quot;expression&quot;: &quot;StartsWith(@Properties['SourceContext'] , 'MyNamespace') or @Exception is not null&quot; }
+  }
+]
+
+[...]
+</code></pre><h1 id="podsumowanie">Podsumowanie</h1>
+<p>I to tyle :-) Zapytanie podobne do zapytań SQL wystarczy, aby filtrować jakie informacje mają być zapisywane do loga.</p>
+<p>Źródła:
+<a href="https://github.com/serilog/serilog-filters-expressions">https://github.com/serilog/serilog-filters-expressions</a></p>
+]]></content>
+        </item>
+        
+    </channel>
 </rss>

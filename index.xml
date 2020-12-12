@@ -1,32 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>tomaszprasolek.pl - BLOG</title>
+    <title>Blog o programowaniu</title>
     <link>https://tomaszprasolek.github.io/</link>
-    <description>Recent content on tomaszprasolek.pl - BLOG</description>
+    <description>Recent content on Blog o programowaniu</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>pl</language>
+    <language>pl-PL</language>
     <lastBuildDate>Tue, 11 Aug 2020 06:36:23 +0100</lastBuildDate><atom:link href="https://tomaszprasolek.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>O blogu</title>
-      <link>https://tomaszprasolek.github.io/oblogu/</link>
+      <title>o mnie</title>
+      <link>https://tomaszprasolek.github.io/omnie/</link>
       <pubDate>Sat, 12 Dec 2020 07:52:37 +0100</pubDate>
       
-      <guid>https://tomaszprasolek.github.io/oblogu/</guid>
-      <description>Ten blog jest moim notatnikiem do różnych rzeczy napotkanych w codziennej pracy deweloperskiej. Chcę tutaj opisywać tutaj różne ciekawe przypadki spotkane w pracy. Rozwiązania różnych problemów, których nie można w łatwy sposób znaleźć w 2 minuty na StackOverflow.
-Głównie wpisy będą dotyczyły języka C#, bo w nim na codzień programuję.
-Poza tym blogiem, mam jeszcze drugi blog poznajgita.pl. Ja można się domyśleć jest on całkowicie związany z systemem kontroli wersji GIT.</description>
-    </item>
-    
-    <item>
-      <title>O mnie</title>
-      <link>https://tomaszprasolek.github.io/omnie/</link>
-      <pubDate>Fri, 11 Dec 2020 07:48:05 +0100</pubDate>
-      
       <guid>https://tomaszprasolek.github.io/omnie/</guid>
-      <description>O mnie  Programista .NET. Fan systemu kontroli wersji GIT. Zapalony gracz w różne gry z serii Mario na Nintendo Wii. Fan NBA od 2015 (oglądałem tylko skróty meczów i to dopiery playoffy), na poważnie od playoffów 2019. Kiedyś wielki fan kostki rubika. Mój rekord to 22.49s 🙂 , a z zamkniętymi oczami 5m 31s :-)  E-mail: kontakt@tomaszprasolek.pl
-Twitter: @tomaszprasolek
-GitHub: https://github.com/tomaszprasolek</description>
+      <description>Cześć. Jestem Tomasz Prasołek. W wielkim skrócie o mnie:
+ Programista .NET. Fan systemu kontroli wersji GIT. Zapalony gracz w różne gry z serii Mario na Nintendo Wii. Fan NBA od 2015 (oglądałem tylko skróty meczów i to dopiery playoffy), na poważnie od playoffów 2019. Kiedyś wielki fan kostki rubika. Mój rekord to 22.49s 😃 , a z zamkniętymi oczami 5m 31s :-)  Jeśli masz jakieś pytania lub uwagi to pisz śmiało na e-mail: kontakt@tomaszprasolek.</description>
     </item>
     
     <item>
@@ -77,7 +65,7 @@ Krótki opis Widok częściowy jest to kod, który można umieszczać w innych w
       <guid>https://tomaszprasolek.github.io/posts/aspnetcore-typeconverter/</guid>
       <description>W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.
 Użyłem do wyboru tygodnia standardowego znacznika HTML:
-&amp;lt;input type=&amp;quot;week&amp;quot;&amp;gt; Opis problemu Ten znacznik przesyła dane w postaci 2020-W24, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę Week.
+&amp;lt;input type=&amp;#34;week&amp;#34;&amp;gt; Opis problemu Ten znacznik przesyła dane w postaci 2020-W24, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę Week.
 Zawiera ona jeden konstruktor:
 public Week(int year, int week) { Year = year; WeekNr = week; } Przeciążyłem metodę ToString, aby zwracało informacje w formacie z kontrolki &amp;lt;input type=&amp;quot;week&amp;quot;&amp;gt;</description>
     </item>
