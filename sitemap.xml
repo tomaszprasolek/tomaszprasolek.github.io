@@ -13,12 +13,7 @@
   </url>
   
   <url>
-    <loc>https://tomaszprasolek.github.io/categories/</loc>
-    <lastmod>2020-08-11T06:36:23+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tomaszprasolek.github.io/categories/csharp/</loc>
+    <loc>https://tomaszprasolek.github.io/tags/chsarp/</loc>
     <lastmod>2020-08-11T06:36:23+01:00</lastmod>
   </url>
   
@@ -28,28 +23,68 @@
   </url>
   
   <url>
-    <loc>https://tomaszprasolek.github.io/posts/prywatny-konstruktor/</loc>
+    <loc>https://tomaszprasolek.github.io/posts/2020-08-11-prywatny-konstruktor/</loc>
     <lastmod>2020-08-11T06:36:23+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tomaszprasolek.github.io/posts/lazygit-692dni-pozniej/</loc>
+    <loc>https://tomaszprasolek.github.io/tags/</loc>
+    <lastmod>2020-08-11T06:36:23+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/posts/2020-07-20-lazygit-692dni-pozniej/</loc>
     <lastmod>2020-07-20T06:52:21+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tomaszprasolek.github.io/posts/przeniesienie-strony-wp/</loc>
+    <loc>https://tomaszprasolek.github.io/tags/git/</loc>
+    <lastmod>2020-07-20T06:52:21+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/tags/lazygit/</loc>
+    <lastmod>2020-07-20T06:52:21+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/tags/mysql/</loc>
     <lastmod>2020-07-18T06:58:13+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tomaszprasolek.github.io/posts/aspnetcore-partialviews/</loc>
+    <loc>https://tomaszprasolek.github.io/posts/2020-07-18-przeniesienie-strony-wp/</loc>
+    <lastmod>2020-07-18T06:58:13+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/tags/wordpress/</loc>
+    <lastmod>2020-07-18T06:58:13+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/posts/2020-06-23-aspnetcore-partialviews/</loc>
     <lastmod>2020-06-23T07:05:51+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tomaszprasolek.github.io/posts/aspnetcore-typeconverter/</loc>
+    <loc>https://tomaszprasolek.github.io/tags/aspnetcore/</loc>
+    <lastmod>2020-06-23T07:05:51+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/tags/csharp/</loc>
+    <lastmod>2020-06-23T07:05:51+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/posts/2020-06-15-aspnetcore-typeconverter/</loc>
     <lastmod>2020-06-15T07:11:48+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomaszprasolek.github.io/tags/serilog/</loc>
+    <lastmod>2020-05-28T07:27:51+01:00</lastmod>
   </url>
   
   <url>
@@ -58,7 +93,7 @@
   </url>
   
   <url>
-    <loc>https://tomaszprasolek.github.io/tags/</loc>
+    <loc>https://tomaszprasolek.github.io/categories/</loc>
   </url>
   
 </urlset>
