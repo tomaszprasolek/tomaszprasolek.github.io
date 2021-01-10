@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Podczas aktualizacji Visual Studio, jego instalator instaluje również nowe wersje .NET Core SDK - każda zajmuje ok. 500 MB.
+Po pewnym czasie może się nazbierać trochę niepotrzebnych paczek. W moim przypadku było to ponad 10, czyli na szybko licząc ok. 5 GB zbędnych rzeczy.
+Pierwszy raz o tym problemie dowiedziałem się ze wpisu .NET Core – oczyszczanie komputera na blogu u Weroniki Mularczyk.
+Wtedy tych niepotrzebnych paczek miałem kilka i wszystkie usunąłem ręcznie." />
+<meta name="keywords" content=", .net core" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://tomaszprasolek.github.io/posts/2021-01-09-dotnetcore-uninstall-tool/" />
+
+
+    <title>
+        
+            Kasowanie starych paczek .NET Core SDK :: Blog o programowaniu 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.393856bf2c430bb6c01d7af07c6fe966e7cce8073435cfbbc46e590bab7405ef.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Kasowanie starych paczek .NET Core SDK">
+<meta itemprop="description" content="Podczas aktualizacji Visual Studio, jego instalator instaluje również nowe wersje .NET Core SDK - każda zajmuje ok. 500 MB.
+Po pewnym czasie może się nazbierać trochę niepotrzebnych paczek. W moim przypadku było to ponad 10, czyli na szybko licząc ok. 5 GB zbędnych rzeczy.
+Pierwszy raz o tym problemie dowiedziałem się ze wpisu .NET Core – oczyszczanie komputera na blogu u Weroniki Mularczyk.
+Wtedy tych niepotrzebnych paczek miałem kilka i wszystkie usunąłem ręcznie.">
+<meta itemprop="datePublished" content="2021-01-09T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2021-01-09T00:00:00+00:00" />
+<meta itemprop="wordCount" content="753">
+
+
+
+<meta itemprop="keywords" content=".net core," />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Kasowanie starych paczek .NET Core SDK"/>
+<meta name="twitter:description" content="Podczas aktualizacji Visual Studio, jego instalator instaluje również nowe wersje .NET Core SDK - każda zajmuje ok. 500 MB.
+Po pewnym czasie może się nazbierać trochę niepotrzebnych paczek. W moim przypadku było to ponad 10, czyli na szybko licząc ok. 5 GB zbędnych rzeczy.
+Pierwszy raz o tym problemie dowiedziałem się ze wpisu .NET Core – oczyszczanie komputera na blogu u Weroniki Mularczyk.
+Wtedy tych niepotrzebnych paczek miałem kilka i wszystkie usunąłem ręcznie."/>
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-01-09 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+        
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BG79VRW0XP"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'G-BG79VRW0XP');
+		</script>
+    </head>
+
+    <body class="">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">hello world</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#00994d;
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="https://tomaszprasolek.github.io/omnie">o mnie</a></li><li><a href="https://tomaszprasolek.github.io/posts">wpisy</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://tomaszprasolek.github.io/posts/2021-01-09-dotnetcore-uninstall-tool/">Kasowanie starych paczek .NET Core SDK</a>
+      </h1>
+
+      
+
+      <div class="post-content">
+        <p>Podczas aktualizacji Visual Studio, jego instalator instaluje również nowe wersje .NET Core SDK - każda zajmuje ok. 500 MB.</p>
+<p>Po pewnym czasie może się nazbierać trochę niepotrzebnych paczek. W moim przypadku było to ponad 10, czyli na szybko licząc ok. 5 GB zbędnych rzeczy.</p>
+<p>Pierwszy raz o tym problemie dowiedziałem się ze wpisu <a href="https://programmer-girl.com/2019/05/25/net-core-oczyszczanie-komputera/">.NET Core – oczyszczanie komputera</a> na blogu u Weroniki Mularczyk.</p>
+<p>Wtedy tych niepotrzebnych paczek miałem kilka i wszystkie usunąłem ręcznie. Ostatnio tych paczek uzbierało mi się trochę więcej, więc postanowiłem poszukać rozwiązania jak to szybko usunąć.</p>
+<p>Znalazłem specjalne narzędzie stworzone do tego. W tym wpisie pokażę to narzędzie.</p>
+<h1 id="dotnet-core-uninstall">dotnet-core-uninstall</h1>
+<p>To narzędzie to <code>dotnet-core-uninstall</code>. Dostępne jest tutaj <a href="https://github.com/dotnet/cli-lab/releases">https://github.com/dotnet/cli-lab/releases</a>. W tym momencie działa tylko na Windowsie i MacOX.</p>
+<h2 id="instalacja">Instalacja</h2>
+<p>Ja pracuję na Windowsie. W tym przypadku trzeba ściągnąć instalator, plik z rozszerzeniem <code>msi</code>. Następnie go uruchomiamy i instalujemy narzędzie.</p>
+<p>Już możemy z niego korzystać wpisując w linii poleceń <code>dotnet-core-uninstall</code>.</p>
+<h2 id="usuwanie-starych-wersji-net-core-sdk">Usuwanie starych wersji .NET Core SDK</h2>
+<p>Aby zobaczyć listę zainstalowanych SDK wpisujemy polecenie:</p>
+<pre><code>dotnet-core-uninstall list
+</code></pre><p>Widać co mamy zainstalowane:</p>
+<pre><code>.NET Core SDKs:
+  3.1.100  x64    [Used by Visual Studio. Specify individually or use --force to remove]
+  2.2.101  x64    [Used by Visual Studio 2017. Specify individually or use --force to remove]
+  2.1.519  x64    [Used by Visual Studio 2017. Specify individually or use --force to remove]
+  2.1.518  x64
+</code></pre><p>Akurat na tym komputerze mam zainstalowane tylko SDK, żadnego Runtime czy Hosting Bundle. Tych wersji tutaj było więcej, chyba ponad 15 więcej, ale przed napisaniem tego posta uruchamiałem to narzędzie i skasowałem większość niepotrzebnych rzeczy. Zostało do usunięcia jeszcze wersja <code>2.1.518</code>.</p>
+<p>Po uruchomieniu narzędzia polecenim <code>dotnet-core-uninstall</code> jest napisane, że aby usunąć konkretną wersję trzeba użyć polecenia <code>remove</code> z podaniem konkretnego numeru wersji.</p>
+<pre><code>remove &lt;VERSION&gt;             Remove the specified .NET Core SDKs or Runtimes.
+</code></pre><p>W obecnej sytuacji mam tylko jedną wersję do usunięcia, więc jedno polecenie i po sprawie.
+Wcześniej miałem tych wersji więcej do usuwania, więc słabo widziało mi się wpisywanie tego wszystkiego ręcznie.</p>
+<p>Na szczęście można usuwać rzeczy hurtem 😃. Wpisujemy polecenie:</p>
+<pre><code>dotnet-core-uninstall remove -h
+</code></pre><p>Dostajemy listę opcji jakie możemy użyć przy usuwaniu:</p>
+<pre><code>Options:
+  --all                          Remove all .NET Core SDKs or Runtimes. (*)
+  --all-below &lt;VERSION&gt;          Remove .NET Core SDKs or Runtimes below the specified version. The specified version will remain. (*)
+  --all-but &lt;VERSIONS&gt;           Remove .NET Core SDKs or Runtimes, except those specified. (*)
+  --all-but-latest               Remove .NET Core SDKs or Runtimes, except the one highest version. (*)
+  --all-lower-patches            Remove .NET Core SDKs or Runtimes superseded by higher patches. Protects global.json. (*)
+  --all-previews                 Remove .NET Core SDKs or Runtimes marked as previews. (*)
+  --all-previews-but-latest      Remove .NET Core SDKs or Runtimes marked as previews, except the one highest preview. (*)
+  --aspnet-runtime               Remove ASP.NET Core Runtimes only.
+  --force                        Force removal of versions that might be used by Visual Studio.
+  --hosting-bundle               Remove .NET Core Runtime &amp; Hosting Bundles only.
+  --major-minor &lt;MAJOR_MINOR&gt;    Remove .NET Core SDKs or Runtimes that match the specified `major.minor` version.
+  --runtime                      Remove .NET Core Runtimes only.
+  --sdk                          Remove .NET Core SDKs only.
+  -v, --verbosity &lt;LEVEL&gt;        Set the verbosity level. Allowed values are q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic].
+  --x64                          Can be used with --sdk, --runtime and --aspnet-runtime to remove x64.
+  --x86                          Can be used with --sdk, --runtime and --aspnet-runtime to remove x86.
+  -y, --yes                      Execute the command without requiring y/n confirmation.
+</code></pre><p>Trochę tego jest 😃. Mnie zainteresowała ta opcja:</p>
+<pre><code>--all-below &lt;VERSION&gt;
+</code></pre><p>Bo chcę usunąć wszystkie wersje niższe niż <code>2.1.519</code></p>
+<h2 id="suchy-bieg-czyli-dry-run">Suchy bieg, czyli dry-run</h2>
+<p>Przed usunięciem można użyć opcji <code>dry-run</code> i sprawdzić jakie paczki zostaną usunięte.</p>
+<p>Dobrze jest uruchomić z tą opcją, aby przypadkiem nie usunąć paczki, która jest używana.</p>
+<pre><code>dotnet-core-uninstall dry-run --sdk --all-below 2.1.519
+</code></pre><p>Jeszcze zaznaczamy, że usuwany SDK: <code>--sdk</code>.
+Widzimy co zostanie usunięte:</p>
+<pre><code>*** DRY RUN OUTPUT
+Specified versions:
+  Microsoft .NET Core SDK 2.1.518 (x64)
+*** END DRY RUN OUTPUT
+
+To avoid breaking Visual Studio or other problems, read https://aka.ms/dotnet-core-uninstall.
+
+Run as administrator and use the remove command to uninstall these items.
+</code></pre><h2 id="faktyczne-usuwanie">Faktyczne usuwanie</h2>
+<p>Jeśli wszystko się zgadza to uruchamiam polecenie:</p>
+<pre><code>dotnet-core-uninstall remove --sdk --all-below 2.1.519
+</code></pre><p>Potwierdzamy, że chcemy kontynuować i po chwili wszystko jest usunięte.</p>
+<pre><code>The following items will be removed:
+  Microsoft .NET Core SDK 2.1.518 (x64)
+
+To avoid breaking Visual Studio or other problems, read https://aka.ms/dotnet-core-uninstall.
+
+Do you want to continue? [y/n] y
+Uninstalling: Microsoft .NET Core SDK 2.1.518 (x64).
+</code></pre><h1 id="podsumowanie">Podsumowanie</h1>
+<p>W ten prosty sposób można skasować nie używane SDK i inne rzeczy oraz odzyskać sporo miejsca na dysku.</p>
+<p>W obecnych czasach, gdzie mamy dyski o dużej pojemności te kilka GB nie robi różnicy. Ale jak ktoś ma laptopa i dysk SSD 128 GB (ja tak miałem 😃), to te kilka giga się przyda.</p>
+<p>Źródła:</p>
+<ul>
+<li><a href="https://github.com/dotnet/cli-lab/releases">https://github.com/dotnet/cli-lab/releases</a></li>
+<li><a href="https://docs.microsoft.com/pl-pl/dotnet/core/additional-tools/uninstall-tool?tabs=windows">https://docs.microsoft.com/pl-pl/dotnet/core/additional-tools/uninstall-tool?tabs=windows</a></li>
+</ul>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/.net-core/">.net core</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        753 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-01-09 01:00
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+
+
+    
+
+        <div>
+            <script src="https://utteranc.es/client.js"
+        repo="tomaszprasolek/tomaszprasolek.github.io"
+        issue-term="pathname"
+        label="blog-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>    
+        </div>
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            
+            
+                <span><a href="https://tomaszprasolek.github.io">Tomasz Prasołek</a></span>
+            
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Theme <a href="https://github.com/rhazdon">Hello Friend NG</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.dc716e9092c9820b77f96da294d0120aeeb189b5bcea9752309ebea27fd53bbe6b13cffb2aca8ecf32525647ceb7001f76091de4199ac5a3caa432c070247f5b.js" integrity="sha512-3HFukJLJggt3&#43;W2ilNASCu6xibW86pdSMJ6&#43;on/VO75rE8/7KsqOzzJSVkfOtwAfdgkd5BmaxaPKpDLAcCR/Ww=="></script>
+
+
+
+    </body>
+</html>
