@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.
+Użyłem do wyboru tygodnia standardowego znacznika HTML:
+&amp;lt;input type=&amp;#34;week&amp;#34;&amp;gt; Opis problemu Ten znacznik przesyła dane w postaci 2020-W24, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę Week.
+Zawiera ona jeden konstruktor:
+public Week(int year, int week) { Year = year; WeekNr = week; } Przeciążyłem metodę ToString, aby zwracało informacje w formacie z kontrolki &amp;lt;input type=&amp;quot;week&amp;quot;&amp;gt;" />
+<meta name="keywords" content=", aspnetcore, csharp" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://tomaszprasolek.github.io/posts/2020-06-15-aspnetcore-typeconverter/" />
+
+
+    <title>
+        
+            [ASP.NET Core] TypeConverter zamiast IModelBinder :: Blog o programowaniu 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="[ASP.NET Core] TypeConverter zamiast IModelBinder">
+<meta itemprop="description" content="W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.
+Użyłem do wyboru tygodnia standardowego znacznika HTML:
+&lt;input type=&#34;week&#34;&gt; Opis problemu Ten znacznik przesyła dane w postaci 2020-W24, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę Week.
+Zawiera ona jeden konstruktor:
+public Week(int year, int week) { Year = year; WeekNr = week; } Przeciążyłem metodę ToString, aby zwracało informacje w formacie z kontrolki &lt;input type=&quot;week&quot;&gt;"><meta itemprop="datePublished" content="2020-06-15T07:11:48+01:00" />
+<meta itemprop="dateModified" content="2020-06-15T07:11:48+01:00" />
+<meta itemprop="wordCount" content="483">
+<meta itemprop="keywords" content="aspnetcore,csharp," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[ASP.NET Core] TypeConverter zamiast IModelBinder"/>
+<meta name="twitter:description" content="W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.
+Użyłem do wyboru tygodnia standardowego znacznika HTML:
+&lt;input type=&#34;week&#34;&gt; Opis problemu Ten znacznik przesyła dane w postaci 2020-W24, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę Week.
+Zawiera ona jeden konstruktor:
+public Week(int year, int week) { Year = year; WeekNr = week; } Przeciążyłem metodę ToString, aby zwracało informacje w formacie z kontrolki &lt;input type=&quot;week&quot;&gt;"/>
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-06-15 07:11:48 &#43;0100 &#43;0100" />
+
+
+
+
+
+
+
+
+
+
+
+        
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BG79VRW0XP"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'G-BG79VRW0XP');
+		</script>
+    </head>
+
+    <body class="">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                hello world</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#00994d;
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/omnie">o mnie</a></li><li><a href="/posts">wpisy</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://tomaszprasolek.github.io/posts/2020-06-15-aspnetcore-typeconverter/">[ASP.NET Core] TypeConverter zamiast IModelBinder</a>
+      </h1>
+
+      
+
+      
+
+      
+
+      <div class="post-content">
+        <p>W ramach nauki .NET Core piszę sobie aplikację webową. Na jednej podstronie mam wybór tygodnia, aby pokazywać dane z wybranego tygodnia.</p>
+<p><img src="/TypeConverter_WygladKontrolki.png" alt="Image"></p>
+<p>Użyłem do wyboru tygodnia standardowego znacznika HTML:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;week&#34;</span>&gt;
+</span></span></code></pre></div><h1 id="opis-problemu">Opis problemu</h1>
+<p>Ten znacznik przesyła dane w postaci <code>2020-W24</code>, czyli rok, a następnie numer tygodnia. W C# nie ma żadnej klasy czy struktury temu odpowiadającej. Dlatego postanowiłem napisać sobie własną klasę <code>Week</code>.</p>
+<p>Zawiera ona jeden konstruktor:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Week(<span style="color:#66d9ef">int</span> year, <span style="color:#66d9ef">int</span> week)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    Year = year;
+</span></span><span style="display:flex;"><span>    WeekNr = week;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Przeciążyłem metodę ToString, aby zwracało informacje w formacie z kontrolki <code>&lt;input type=&quot;week&quot;&gt;</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">$&#34;{Year}-W{WeekNr}&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Zawiera jeszcze kilka metod pomocniczych:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> DateTime GetFirstDayOfWeek()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Week GetCurrentWeek()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Week GetNextWeek()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Week GetPreviousWeek()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> GetDaysInWeekPeriod()
+</span></span></code></pre></div><p>Wszystko spoko działa :-) Tylko za każdym razem jak przesyłam dane z formularza, to muszę stringa z informacją o tygodniu i roku przekształcać na obiekt <code>Week</code>. Chciałbym aby automatycznie to się robiło.</p>
+<p>Ucząc się podstaw ASP.NET Core czytałem oczywiście o czymś taki jak bindowanie danych. Framework sam konwertuje teksty na odpowiedni typ, dzięki temu programista już nie musi się o to martwić. Skoro takie coś istnieje, to pomyślałem, że pewnie da się jakąś własną klasę napisać, która zamieni przychodzący tekst na obiekt <code>Week</code>.</p>
+<p>Zacząłem googlować <strong>custom model binding</strong> i trafiłem na artykuł <a href="https://docs.microsoft.com/pl-pl/aspnet/core/mvc/advanced/custom-model-binding?view=aspnetcore-3.1">Custom Model Binding in ASP.NET Core</a> z oficjalnej dokumentacji. Jest tam napisane jak zrobić własne bindowanie do własnego modelu.</p>
+<p>Już zacząłem to robić. Dodałem klasę, która implementowała interfejs <code>IModelBinder</code>, ale na szczęście doczytałem artykuł do końca :-)</p>
+<p>Disclaimer: Czasami zdarza mi się, że szybko chce coś zrobić i przeglądam tylko kod kopiuje go do siebie, a potem się denerwuje, że coś nie działa. Okazuje się, że coś pominę i nie doczytam… i nie działa.</p>
+<p>Na końcu jest napisane:</p>
+<blockquote>
+<p>Typically shouldn’t be used to convert a string into a custom type, a TypeConverter is usually a better option.</p>
+</blockquote>
+<h1 id="użycie-typeconverter-zamiast-imodelbinder">Użycie TypeConverter zamiast IModelBinder</h1>
+<p>I tak zrobiłem :-) I wszystko działa i wydaje się nawet, że jest to prostsze rozwiązanie. Co musiałem zrobić?</p>
+<p>Dodać klasę <code>WeekConverter</code>, która dziedziczy po klasie <code>TypeConverter</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WeekConverter</span> : TypeConverter
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">bool</span> CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (sourceType == <span style="color:#66d9ef">typeof</span>(<span style="color:#66d9ef">string</span>))
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">base</span>.CanConvertFrom(context, sourceType);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">object</span> ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, <span style="color:#66d9ef">object</span> <span style="color:#66d9ef">value</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">value</span> <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">string</span> isoWeek)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> result = isoWeek.Split(<span style="color:#e6db74">&#34;-W&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Week(Convert.ToInt32(result[<span style="color:#ae81ff">0</span>]), Convert.ToInt32(result[<span style="color:#ae81ff">1</span>]));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">base</span>.ConvertFrom(context, culture, <span style="color:#66d9ef">value</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Zaimplementowałem tylko 2 metody, których potrzebuję:</p>
+<ul>
+<li>CanConvertFrom</li>
+<li>ConvertFrom</li>
+</ul>
+<p>TypeConverter konweruje w 2 strony ale mi tylko była potrzebna konwersja z typu <code>string</code> do <code>Week</code>.</p>
+<p>Dodatkowo klasę <code>Week</code> musiałem oznaczyć atrybutem:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#a6e22e">[TypeConverter(typeof(WeekConverter))]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Week</span>
+</span></span></code></pre></div><p>W metodzie oczywiście zmieniłem typ na <code>Week</code> + parę drobnych poprawek i już :-) I tylko tyle :-) Wszystko już działa.</p>
+<p>Z formularza na stronie dostaję od razu obiekt <code>Week</code>, a nie <code>string</code>.</p>
+<h1 id="podsumowanie">Podsumowanie</h1>
+<p>Jeśli możesz używaj <strong>TypeConverter</strong> zamiast własnego bindowania modelu. Czytaj dokumentację i artykuły do końca, mogą się tam znajdować ważne informacje.</p>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/aspnetcore/">aspnetcore</a></span>
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/csharp/">csharp</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        483 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-06-15 08:11
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>

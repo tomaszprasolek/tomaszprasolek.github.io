@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Moja żona jest grafikiem i pomagam jej w ramach jej studia graficznego: https://solovestudio.pl/ robić strony internetowe oparte o system zarządzania treścią WordPress. Gosia przygotowuje całą stronę od strony wizualnej, dla mnie zostają kwestie techniczne :-) Czyli na przykład przeniesienie jej z serwera testowego na serwer klienta.
+W tym wpisie pokażę jak to zrobić. Będzie to ogólny opis procesu. Nie będzie szczegółów jak działa program FileZilla do połączenia z serwerem FTP, jak zainstalować narzędzie Search-Replace-DB. Te informacje można znaleźć w internecie. Będzie to ogólny opis kroków jakie trzeba wykonać aby przenieść stronę z jednego serwera na drugi.
+" />
+<meta name="keywords" content=", wordpress, mysql" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://tomaszprasolek.github.io/posts/2020-07-18-przeniesienie-strony-wp/" />
+
+
+    <title>
+        
+            Przeniesienie strony zrobionej w WordPress na inny serwer :: Blog o programowaniu 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Przeniesienie strony zrobionej w WordPress na inny serwer">
+<meta itemprop="description" content="Moja żona jest grafikiem i pomagam jej w ramach jej studia graficznego: https://solovestudio.pl/ robić strony internetowe oparte o system zarządzania treścią WordPress. Gosia przygotowuje całą stronę od strony wizualnej, dla mnie zostają kwestie techniczne :-) Czyli na przykład przeniesienie jej z serwera testowego na serwer klienta.
+W tym wpisie pokażę jak to zrobić. Będzie to ogólny opis procesu. Nie będzie szczegółów jak działa program FileZilla do połączenia z serwerem FTP, jak zainstalować narzędzie Search-Replace-DB. Te informacje można znaleźć w internecie. Będzie to ogólny opis kroków jakie trzeba wykonać aby przenieść stronę z jednego serwera na drugi."><meta itemprop="datePublished" content="2020-07-18T06:58:13+01:00" />
+<meta itemprop="dateModified" content="2020-07-18T06:58:13+01:00" />
+<meta itemprop="wordCount" content="888">
+<meta itemprop="keywords" content="wordpress,mysql," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Przeniesienie strony zrobionej w WordPress na inny serwer"/>
+<meta name="twitter:description" content="Moja żona jest grafikiem i pomagam jej w ramach jej studia graficznego: https://solovestudio.pl/ robić strony internetowe oparte o system zarządzania treścią WordPress. Gosia przygotowuje całą stronę od strony wizualnej, dla mnie zostają kwestie techniczne :-) Czyli na przykład przeniesienie jej z serwera testowego na serwer klienta.
+W tym wpisie pokażę jak to zrobić. Będzie to ogólny opis procesu. Nie będzie szczegółów jak działa program FileZilla do połączenia z serwerem FTP, jak zainstalować narzędzie Search-Replace-DB. Te informacje można znaleźć w internecie. Będzie to ogólny opis kroków jakie trzeba wykonać aby przenieść stronę z jednego serwera na drugi."/>
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-07-18 06:58:13 &#43;0100 &#43;0100" />
+
+
+
+
+
+
+
+
+
+
+
+        
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BG79VRW0XP"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'G-BG79VRW0XP');
+		</script>
+    </head>
+
+    <body class="">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                hello world</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#00994d;
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/omnie">o mnie</a></li><li><a href="/posts">wpisy</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        5 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://tomaszprasolek.github.io/posts/2020-07-18-przeniesienie-strony-wp/">Przeniesienie strony zrobionej w WordPress na inny serwer</a>
+      </h1>
+
+      
+
+      
+
+      
+
+      <div class="post-content">
+        <p>Moja żona jest grafikiem i pomagam jej w ramach jej studia graficznego: <a href="https://solovestudio.pl/">https://solovestudio.pl/</a> robić strony internetowe oparte o system zarządzania treścią WordPress. Gosia przygotowuje całą stronę od strony wizualnej, dla mnie zostają kwestie techniczne :-) Czyli na przykład przeniesienie jej z serwera testowego na serwer klienta.</p>
+<p>W tym wpisie pokażę jak to zrobić. Będzie to ogólny opis procesu. Nie będzie szczegółów jak działa program FileZilla do połączenia z serwerem FTP, jak zainstalować narzędzie Search-Replace-DB. Te informacje można znaleźć w internecie. Będzie to ogólny opis kroków jakie trzeba wykonać aby przenieść stronę z jednego serwera na drugi.</p>
+<h1 id="wstęp">Wstęp</h1>
+<p>Inne powody do przeniesienia strony na inny serwer mogą być takie:</p>
+<ul>
+<li>Obecny serwer wolno działa.</li>
+<li>Jest super promocja u innego hostingodawcy :-)</li>
+</ul>
+<p>Z czego składa się strona internetowa zrobiona przy pomocy systemu WordPress? Z plików tworzących szablon strony, czyli plików o rozszerzeniach: php, js, css, różne grafiki i inne. Treść strony + różne ustawienia zapisane są w bazie danych MySQL.</p>
+<p>Czyli trzeba przenieść na serwer docelowy pliki i bazę MySQL.</p>
+<p><strong>Ważne! Jeśli przenosimy stronę na inną domenę, to trzeba w bazie zmienić wszystkie wpisy nazwy starej domeny na nową.</strong></p>
+<p>W naszym przypadku testowa strona była pod adresem: <a href="http://serwer1966453.home.pl/autoinstalator/wordpress/">http://serwer1966453.home.pl/autoinstalator/wordpress/</a>, a my przenosimy go na <a href="https://ispeakacademy.pl/">https://ispeakacademy.pl/</a>.</p>
+<p>To znaczy, że wszystkie wpisy w bazie zawierające adres strony testowej trzeba zamienić na nazwę domeny klienta. Oczywiście nie trzeba tego robić ręcznie, są do tego narzędzia. Ale o tym napiszę później.</p>
+<p>Zacznijmy od początku.</p>
+<h1 id="przygotowanie">Przygotowanie</h1>
+<p>Na początku musimy od razu na serwerze docelowym stworzyć nową bazę danych MySQL wraz z nowym użytkownikiem. Trzeba nadać temu użytkownikowi wszystkie uprawnienia do tejże bazy.</p>
+<p>Korzystałem z kilku hostingów i w każdym te rzeczy można zrobić bez problemu z panelu klienta.</p>
+<p>Zapisz sobie gdzieś:</p>
+<ul>
+<li>Nazwę nowej bazy danych.</li>
+<li>Nazwę użytkownika.</li>
+<li>Hasło użytkownika do bazy.</li>
+</ul>
+<p>Przyda Ci się to w kolejnych krokach.</p>
+<h1 id="pliki">Pliki</h1>
+<p>Najpierw zajmiemy się plikami. Najlepiej ściągnąć je do siebie jakimś programem, który obsługuje FTP (File Tranfer Protocol). Ja używam i polecam <a href="https://filezilla-project.org/">FileZilla</a>. Dane do logowania do konta FTP powinniśmy dostać emailem podczas zakupu hostingu. Jeśli nie dostaliśmy, to takie konto można założyć w panelu klienta u hostingodawcy.</p>
+<p>Podłączamy się do serwera i wybieramy katalog gdzie leży strona, przeważnie ten katalog nazywa się <code>public_html</code>. Ściągamy wszystko na nasz komputer. Tych plików może być nawet kilkanaście tysięcy, więc chwilę się zejdzie :-)</p>
+<p>Trzeba w plikach dokonać jednej zmiany. W pliku <code>wp-config.php</code> musimy zmienić dane starej bazy danych na nową. Na tą bazę, którą utworzyliśmy na samym początku. Zmieniamy następujące rzeczy</p>
+<ul>
+<li>Nazwę bazy danych.</li>
+<li>Nazwę użytkownika.</li>
+<li>Hasło użytkownika do bazy.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#75715e">// ** MySQL settings - You can get this info from your web host ** //
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#e6db74">/** The name of the database for WordPress */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_NAME&#39;</span>, <span style="color:#e6db74">&#39;db_name&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">/** MySQL database username */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_USER&#39;</span>, <span style="color:#e6db74">&#39;username&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">/** MySQL database password */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_PASSWORD&#39;</span>, <span style="color:#e6db74">&#39;password&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">/** MySQL hostname */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;DB_HOST&#39;</span>, <span style="color:#e6db74">&#39;localhost&#39;</span>);
+</span></span></code></pre></div><p>Następnie łączymy się na docelowy serwer gdzie chcemy naszą stronę umieścić i wrzucamy tam wszystkie pliki.</p>
+<p>Ja już pisałem wcześniej, plików może być dużo. Przeważnie szybkość przesyłania danych na serwer jest wolniejsza niż ściąganie danych, więc w tym przypadku zejdzie się trochę dłużej.</p>
+<h1 id="baza-danych-mysql">Baza danych MySQL</h1>
+<p>Chyba wszyscy hostingodawcy umożliwiają dostęp do bazy przez aplikację <a href="https://www.phpmyadmin.net/">phpMyAdmin</a>. Uruchamiamy ją na serwerze źródłowym. Z listy po lewej wybieramy bazę danych, którą chcemy wyeksportować. Klikamy opcję Eksportuj, wybieramy metodę eksportu “Szybko – wyświetlane są tylko minimalne opcje” i naciskamy “Wykonaj”. Plik z rozszerzeniem .sql zapisujemy na dysku.</p>
+<p><strong>Uwaga! Wersje aplikacji phpMyAdmin mogą się różnić, więc nie zdziw się jeśli u Ciebie opcje, które opisałem powyżej będą inne.</strong></p>
+<p>Następnie logujemy się do aplikacji phpMyAdmin na serwerze docelowym. Wybieramy bazę, do której chcemy zaimportować dane i wybieramy opcję “Importuj”. Wybieramy wcześniej zapisany plik .sql i już :-)</p>
+<h1 id="zamiana-nazwy-domeny-w-bazie">Zamiana nazwy domeny w bazie</h1>
+<p>Ostatni krok: zamiana w bazie nazwy starej domeny na nową. Do tego użyjemy narzędzia Search-Replace-DB. Służy ono właśnie do zamiany tekstu w bazie danych. Przeszukuje wszystkie tabele podanej bazy danych i zamienia wyszukany tekst, na tekst który chcemy.</p>
+<p>Można go ściągnąć bezpośrednio z GitHuba: <a href="https://github.com/interconnectit/Search-Replace-DB/releases/tag/4.1.2">https://github.com/interconnectit/Search-Replace-DB/releases/tag/4.1.2</a>.</p>
+<p>W naszym przypadku adres serwera testowego był taki:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">https://serwer1966453.home.pl/autoinstalator/wordpress
+</code></pre><p>I musiałem go zamienić na:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">https://ispeakacademy.pl
+</code></pre><p>Wpisuję w aplikacji, że chcę zamienić jedno na drugie i naciskam <strong>Dry-run</strong>. Ta opcja zadziała “na sucho”, czyli przeszuka wszystkie tabele i pokaże w który występuje wyszukiwana fraza. W tym trybie nic w bazie nie zostanie zmienione. Jest to bardzo przydatna opcja, ja z niej zawsze korzystam. Po chwili pokaże się podsumowanie w jakich tabelach została znaleziona wyszukiwana fraza i ile razy. Można również podejrzeć, gdzie wyszukiwana fraza znajduje się w tekście w bazie.</p>
+<p>Trzeba pamiętać, aby zamienić różne wersje domeny:</p>
+<ul>
+<li>Zabezpieczona https
+<ul>
+<li><code>https://serwer1966453.home.pl/autoinstalator/wordpress</code> na <code>https://ispeakacademy.pl</code></li>
+</ul>
+</li>
+<li>Niezabezpieczona, czyli tylko http
+<ul>
+<li><code>http://serwer1966453.home.pl/autoinstalator/wordpress</code> na <code>https://ispeakacademy.pl</code></li>
+</ul>
+</li>
+<li>Bez przedrostka http
+<ul>
+<li><code>serwer1966453.home.pl/autoinstalator/wordpress</code> na <code>ispeakacademy.pl</code></li>
+</ul>
+</li>
+</ul>
+<p>Jeśli jesteśmy pewni, że chcemy zmienić wpisany tekst w bazie, to klikamy <strong>Run live</strong>. Przy obu opcjach jest podsumowanie jakie tabele były przeszukiwane i w których znaleziono teksty do zmiany.</p>
+<p>Opcja dry-run jest idealna, aby sprawdzać czy tekst, który powinniśmy zmienić nie został jeszcze w bazie.</p>
+<p>Na koniec dobrze jest jeszcze wpisać samą nazwę domeny i zobaczyć, co znajdzie. U mnie znalazło takie coś:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">serwer1966453.home.pl\/autoinstalator\/wordpress
+</code></pre><p>I to też zmieniłem :-)</p>
+<h1 id="podsumowanie">Podsumowanie</h1>
+<p>Aby przenieść stronę zrobioną w WordPress na inny serwer trzeba zrobić 3 kroki:</p>
+<ul>
+<li>Przenieść pliki.</li>
+<li>Przenieść bazę danych MySQL.</li>
+<li>Opcjonalnie zmienić w bazię nazwę domeny na nową.</li>
+</ul>
+<p>I to tyle :-) Mam nadzieję, że ten wpis Ci pomógł przenieść Twoją lub kogoś innego stronę na nowy serwer.</p>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/wordpress/">wordpress</a></span>
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/mysql/">mysql</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        888 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-07-18 07:58
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Ten wpis opisuje jak zainstalować generator statycznych stron Hugo na Windowsie. Jak go skonfigurować i stworzyć w nim bloga. Pokażę jak skonfigurować odpowiednio gita (bo to też ważne) i w końcu jak ją opublikować na GitHub Pages.
+Wstęp TL;DR
+Opis jak doszło do powstania tego bloga. Jak chcesz techniczne mięsko to przeskocz do następnego rozdziału.
+Jak w 2018 roku zaczynałem blogować, to mój blog miał być miejscem na różne rzeczy, których nauczyłem się w czasie pracy." />
+<meta name="keywords" content=", Hugo, git, GitHub, GitHub Pages" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://tomaszprasolek.github.io/posts/hugo-windows-github-pages/" />
+
+
+    <title>
+        
+            Statyczna strona zrobiona w Hugo na Windowsie, opublikowana na GitHub Pages :: Blog o programowaniu 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Statyczna strona zrobiona w Hugo na Windowsie, opublikowana na GitHub Pages">
+<meta itemprop="description" content="Ten wpis opisuje jak zainstalować generator statycznych stron Hugo na Windowsie. Jak go skonfigurować i stworzyć w nim bloga. Pokażę jak skonfigurować odpowiednio gita (bo to też ważne) i w końcu jak ją opublikować na GitHub Pages.
+Wstęp TL;DR
+Opis jak doszło do powstania tego bloga. Jak chcesz techniczne mięsko to przeskocz do następnego rozdziału.
+Jak w 2018 roku zaczynałem blogować, to mój blog miał być miejscem na różne rzeczy, których nauczyłem się w czasie pracy."><meta itemprop="datePublished" content="2020-12-24T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-12-24T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1152">
+<meta itemprop="keywords" content="Hugo,git,GitHub,GitHub Pages," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Statyczna strona zrobiona w Hugo na Windowsie, opublikowana na GitHub Pages"/>
+<meta name="twitter:description" content="Ten wpis opisuje jak zainstalować generator statycznych stron Hugo na Windowsie. Jak go skonfigurować i stworzyć w nim bloga. Pokażę jak skonfigurować odpowiednio gita (bo to też ważne) i w końcu jak ją opublikować na GitHub Pages.
+Wstęp TL;DR
+Opis jak doszło do powstania tego bloga. Jak chcesz techniczne mięsko to przeskocz do następnego rozdziału.
+Jak w 2018 roku zaczynałem blogować, to mój blog miał być miejscem na różne rzeczy, których nauczyłem się w czasie pracy."/>
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-12-24 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+        
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BG79VRW0XP"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'G-BG79VRW0XP');
+		</script>
+    </head>
+
+    <body class="">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                hello world</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#00994d;
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/omnie">o mnie</a></li><li><a href="/posts">wpisy</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        6 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://tomaszprasolek.github.io/posts/hugo-windows-github-pages/">Statyczna strona zrobiona w Hugo na Windowsie, opublikowana na GitHub Pages</a>
+      </h1>
+
+      
+
+      
+
+      
+
+      <div class="post-content">
+        <p>Ten wpis opisuje jak zainstalować generator statycznych stron Hugo na Windowsie. Jak go skonfigurować i stworzyć w nim bloga. Pokażę jak skonfigurować odpowiednio gita (bo to też ważne) i w końcu jak ją opublikować na GitHub Pages.</p>
+<h1 id="wstęp">Wstęp</h1>
+<p><strong>TL;DR</strong><br>
+Opis jak doszło do powstania tego bloga. Jak chcesz techniczne mięsko to przeskocz do następnego rozdziału.</p>
+<hr>
+<p>Jak w 2018 roku zaczynałem blogować, to mój blog miał być miejscem na różne rzeczy, których nauczyłem się w czasie pracy. Rozwiązania jakichś problemów, instrukcja jak coś skonfigurować itp.</p>
+<p>W tym czasie, w pracy również zaczęliśmy korzystać z systemu kontroli wersji GIT, wcześniej używaliśmy TFS (Team Foundation Server). Zacząłem poznawać gita coraz bardziej i odkrywałem w nim coraz więcej ficzerów, różnych możliwości rozwiązań. Wtedy bardzo polubiłem gita.</p>
+<p>Właśnie o gicie napisałem pierwsze 2 posty. Git jest tak elastyczny w działaniu, że jedną rzecz można zrobić na kilka sposobów. W każdym kolejnym tygodniu poznawałem nowe rzeczy, który opisywałem na blogu.</p>
+<p>Zamiast bloga o programowaniu, powstał mi blog w całości poświęcony systemowi kontroli wersji Git. Bloga przemianowałem na <a href="https://poznajgita.pl">poznajgita.pl</a> i pisałem tylko o gicie - od lipca 2018 do kwietnia 2020 - czyli prawie 2 lata.</p>
+<p>Potem zapał na pisanie o gicie minął. Bardzo dużo nauczyłem się o gicie, a na blogu jakoś nie chciało mi się pisać totalnych podstaw. Większość wpisów dotyczyło jakichś ciekawych ukrytych możliwości gita lub były to instrukcje jak zrobić konkretnę rzecz.</p>
+<p>Wróciłem do pierwotnych założeń i na blogu o gicie pojawiło się kilka postów w ogóle nie związanych z tym tematem. Na początku nie chciało mi się do tego stawiać nowego bloga, do wpisów innych niż git, więc zostały one opublikowane na blogu <a href="https://poznajgita.pl">poznajgita.pl</a>.</p>
+<p>Jednak wreszcie nadszedł ten czas i postanowiłem postawić nowego bloga na wpisy nie związane z gitem, właśnie teraz go czytasz 😃</p>
+<h1 id="hugo-instalacja-i-konfiguracja">Hugo: Instalacja i konfiguracja</h1>
+<p>Pracuję na Windowsie i do instalacji Hugo skorzystałem z tego poradnika:</p>
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/G7umPCU-8xc" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+<p>Gdy Hugo mam już zainstalowanego tworzymy nową stronę poleceniem:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">hugo new site quickstart
+</code></pre><p>Powstał katalog o nazwie <code>quickstart</code> zawierający dane naszej strony.</p>
+<p>Musimy dodać jeszcze skórkę do naszej strony. Wykonujemy:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">cd quickstart
+git init
+git submodule add https://github.com/budparr/gohugo-theme-ananke.git themes/ananke
+</code></pre><p>Wybór skórek jest bardzo dużo. Można je przejrzeć tutaj: <a href="https://themes.gohugo.io/">https://themes.gohugo.io/</a>. Skórkę dodajemy jako submoduł, aby nie trzeba było trzymać tych plików w naszym repozytorium.</p>
+<p>W pliku konfiguracyjnym <code>config.toml</code> musimy jeszcze dodać wpis, że używany tej skórki, dodajemy na końcu linijkę:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">theme = &#34;ananke&#34;
+</code></pre><p>Możemy dodać jakiś testowy wpis:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">hugo new posts/my-first-post.md
+</code></pre><p>Wpis stworzył w się w katalogu <code>content\posts</code>.</p>
+<p>Uruchamiamy serwer poleceniem:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">hugo server -D
+</code></pre><p>Pod adresem <code>localhost:1313</code> możemy zobaczyć naszą stronę.</p>
+<p><img src="/hugo-windows-github-pages/hugo_site.PNG" alt="Image"></p>
+<p>Opcja <code>-D</code> oznacza, aby pokazywał wpisy, które są jeszcze szkicami (ang. draft). Jak otworzysz plik <code>content\posts\my-first-post.md</code> to zobaczysz, że ma on ustawienie <code>draft = true</code>. Publikacja postu polega po prostu na zmianie tego ustawienia na <code>false</code> (no i oczywiście wrzuceniu strony na serwer 😃 )</p>
+<hr>
+<p>Nie będę w tym wpisie opisywał jak działa Hugo, jak pisać posty itd. Wszystyko jest opisane w dokumentacji Hugo: <a href="https://gohugo.io/documentation/">https://gohugo.io/documentation/</a>. Chcę tutaj tylko opisać jak zainstalować, skonfigurować i wrzucić naszą stronę na GitHub Pages.</p>
+<h1 id="google-analytics">Google Analytics</h1>
+<p>Zakładam, że posiadasz konto Google oraz założysz sobie konto w Google Analytics dla właśnie tworzonej strony.</p>
+<hr>
+<p>Google Analytics coś ostatnio się zmieniło i nie udostępnia już kodu śledzenia, który możemy wkleić w konfiguracji naszej strony, tak jak jest napisane w dokumentacji: <a href="https://gohugo.io/templates/internal#configure-google-analytics">https://gohugo.io/templates/internal#configure-google-analytics</a></p>
+<hr>
+<p>Dla naszej strony trzeba stworzyć nową usługę i dodać strumień danych (Administracja -&gt; 2 kolumna -&gt; Strumienie danych). Po stworzeniu strumienia w sekcji <strong>Instrukcje tagowania</strong> ma Globalny tag witryny (gtag.js)</p>
+<p>Kod ten trzeba umieścić w sekcji <code>&lt;head&gt;</code>  na każdej stronie, którą chcesz monitorować. Żeby to zrobić w Hugo wystarczy ten kod umieścić w jednym miejscu. U mnie to będzie ten plik:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">\layouts\_default\baseof.html 
+</code></pre><p>Wklejamy kod do sekcji <code>&lt;head&gt;</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .Site.Language }}&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span>        {{ partial &#34;head.html&#34; . }}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">&lt;!-- Global site tag (gtag.js) - Google Analytics --&gt;</span>
+</span></span><span style="display:flex;"><span>		&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">async</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>		&lt;<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>		  window.<span style="color:#a6e22e">dataLayer</span> <span style="color:#f92672">=</span> window.<span style="color:#a6e22e">dataLayer</span> <span style="color:#f92672">||</span> [];
+</span></span><span style="display:flex;"><span>		  <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">gtag</span>(){<span style="color:#a6e22e">dataLayer</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">arguments</span>);}
+</span></span><span style="display:flex;"><span>		  <span style="color:#a6e22e">gtag</span>(<span style="color:#e6db74">&#39;js&#39;</span>, <span style="color:#66d9ef">new</span> Date());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		  <span style="color:#a6e22e">gtag</span>(<span style="color:#e6db74">&#39;config&#39;</span>, <span style="color:#e6db74">&#39;G-XXXXXXXX&#39;</span>);
+</span></span><span style="display:flex;"><span>		&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">head</span>&gt;
+</span></span></code></pre></div><p>Tworzenie strony w Hugo opiera się na szablonach, czyli każda strona jest stworzona z wielu elementów, które są wykorzystywane na różnych stronach. Jak kod zostanie tam wklejony to będzie widoczny na każdej stronie.</p>
+<p>Po wrzuceniu kodu na serwer zbieranie statystyk zacznie działać.</p>
+<h1 id="komentarze">Komentarze</h1>
+<p>Tworząc bloga na Wordpressie system komentarzy jest od razu tam wbudowany. W przypadku statycznych stron trzeba ogarnąć jakiś zewnętrzny system. Hugo wspiera <a href="https://disqus.com/">Disqus</a>, można jednak użyć również innego systemu komentarzy. Obsługiwane systemy można znaleźć tutaj: <a href="https://gohugo.io/content-management/comments/">https://gohugo.io/content-management/comments/</a>.</p>
+<p>Ja zdecydowałem się na <a href="https://utteranc.es/">utterances</a>, ponieważ:</p>
+<ul>
+<li>Wszystkie komentarze są zapisywane jako GitHub Issues w moim repozytorium. Czyli pozostają moje 😃 Nie chciałem innych systemów właśnie z tego powodu, aby komentarze nie były gdzieś na jakimś serwerze, tylko u mnie.</li>
+<li>Prosta konfiguracja. Nie trzeba mieć dodatkowego serwera czy usługi. Dodaję do stronki skrypt i wszystko działa.</li>
+</ul>
+<p>Minusem tego rozwiązania jest to, że nie da się przenieść komentarzy - jeśli już jakieś mamy pod wpisami - z innego systemu. Każdy komentarz to przecież musi być GitHub Issue.</p>
+<h1 id="konfiguracja-gita">Konfiguracja Gita</h1>
+<p>W następnym rozdziale będziemy wrzucać naszą stronkę na serwer, więc to się przyda.</p>
+<p>Jeśli masz ustawione w konfiguracji gita <code>core.autocrlf true</code> to jest wszystko OK. Druga opcja to linią <code>.gitattributes</code> z linią na początku <code>* text=auto</code> - jeśli to masz to też jest OK 👍</p>
+<p>Chodzi mi o zakończenie linii (line endings). Jeśli pracujesz na Linuxie lub macOS, to tego problemu nie doświadczysz. Ja jednak korzystam z Windowsa.</p>
+<p>Możesz o tym problemie więcej przeczytać tutaj: <a href="https://www.edwardthomson.com/blog/git_for_windows_line_endings.html">https://www.edwardthomson.com/blog/git_for_windows_line_endings.html</a></p>
+<p>Ja akurat robiłem tego bloga na kompie po formacie. Musiałem przed startem zainstalować git i inne potrzebne narzędzia. Całkowicie o tym zapomniałem, nie zwróciłem uwagi na komunikaty w konsoli podczas commitowania kodu i przez to straciłem trochę czasu.</p>
+<p>Po wrzuceniu już wygenerowanego kodu, strona nie do końca działała. Wyglądało na to jakby CSS się nie załadowały.</p>
+<p>Uruchomiłem w Google Chrome narzędzia dewelopera (F12) i w konsoli był błąd: <code>Failed to find a valid digest in the 'integrity' attribute for resource</code></p>
+<p>Trochę googlowania i znalazłem chodzi właśnie o znaki końca linii: <a href="https://github.com/xianmin/hugo-theme-jane/issues/269">https://github.com/xianmin/hugo-theme-jane/issues/269</a></p>
+<h1 id="github-pages">GitHub Pages</h1>
+<p>Zostało nam tylko opublikowanie naszej strony. Wcześniej uruchamialiśmy serwer poleceniem <code>hugo server -D</code>. Jednak jak skończyliśmy pracę na blogiem lub nowym postem trzeba wygenerować pliki naszej strony. Odpalamy Hugo po prostu poleceniem</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">hugo
+</code></pre><p>Pojawił się nowy katalog <code>public</code> i tam właśnie znajdują się pliki naszej strony. Pliki z tego katalogu trzeba wrzucić na serwer.</p>
+<p>Cały proces deploymentu jest dobrze opisany w dokumentacji, o tutaj -&gt; <a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">https://gohugo.io/hosting-and-deployment/hosting-on-github/</a>. Nie będę tego przepisywał. Nawet jest tam przygotowany skrypt, pomagający w deployu naszej stronki. Fajnie 👍</p>
+<p>Do powstania naszego blog ostatecznie są potrzebne 3 repozytoria:</p>
+<ol>
+<li>Dane bloga w formie zrozumiałej dla narzędzia Hugo. Pliki konfiguracyjne + pliki Markdown.</li>
+<li>Gotowa do opublikowania strona.</li>
+<li>Repozytorium z wybraną przez Nas skórką.</li>
+</ol>
+<p>Repozytorium z pkt. 1 jest główne, pozostałe są do niego dołączone jako submoduły.</p>
+<p><strong>Pamiętaj o odpowiedniej konfiguracji Gita. Patrz poprzedni rozdział.</strong></p>
+<h1 id="podsumowanie">Podsumowanie</h1>
+<p>W tym momencie mamy już postaniowego bloga przy użyciu narzędzia Hugo. Jest już widoczny w intenecie. Można dodawać komentarze do wpisów, a statystyki odwiedzin zbierają się w Google Analytics.</p>
+<p>Pozostaje tylko wypełnić go treścią.</p>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/hugo/">Hugo</a></span>
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/git/">git</a></span>
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/github/">GitHub</a></span>
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/github-pages/">GitHub Pages</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        1152 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-12-24 01:00
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>

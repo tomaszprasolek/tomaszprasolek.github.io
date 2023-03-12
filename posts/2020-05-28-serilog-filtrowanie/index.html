@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Ostatnio w moim jednym pet projekcie (pisany w ASP.NET Core 3.1.) wymyśliłem sobie tak, aby do bazy zapisywane były tylko te logi, które:
+W polu SourceContext zawieraja się namespace aplikacji lub Pole @Exception nie jest puste. Chciałem do bazy zapisywać tylko błędy oraz moje logi z aplikacji, żeby widzieć jak aplikacja działa. Zapisuję tylko to, bo do tych błędów będą miał zrobioną na stronie oddzielną podstronę do ich przeglądania. Chciałem aby na tej podstronie były tylko logi, które mnie interesują, żebym nie musiał przeszukiwać dużej liczby." />
+<meta name="keywords" content=", serilog" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://tomaszprasolek.github.io/posts/2020-05-28-serilog-filtrowanie/" />
+
+
+    <title>
+        
+            Serilog – jak filtrować logi? :: Blog o programowaniu 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Serilog – jak filtrować logi?">
+<meta itemprop="description" content="Ostatnio w moim jednym pet projekcie (pisany w ASP.NET Core 3.1.) wymyśliłem sobie tak, aby do bazy zapisywane były tylko te logi, które:
+W polu SourceContext zawieraja się namespace aplikacji lub Pole @Exception nie jest puste. Chciałem do bazy zapisywać tylko błędy oraz moje logi z aplikacji, żeby widzieć jak aplikacja działa. Zapisuję tylko to, bo do tych błędów będą miał zrobioną na stronie oddzielną podstronę do ich przeglądania. Chciałem aby na tej podstronie były tylko logi, które mnie interesują, żebym nie musiał przeszukiwać dużej liczby."><meta itemprop="datePublished" content="2020-05-28T07:27:51+01:00" />
+<meta itemprop="dateModified" content="2020-05-28T07:27:51+01:00" />
+<meta itemprop="wordCount" content="348">
+<meta itemprop="keywords" content="serilog," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Serilog – jak filtrować logi?"/>
+<meta name="twitter:description" content="Ostatnio w moim jednym pet projekcie (pisany w ASP.NET Core 3.1.) wymyśliłem sobie tak, aby do bazy zapisywane były tylko te logi, które:
+W polu SourceContext zawieraja się namespace aplikacji lub Pole @Exception nie jest puste. Chciałem do bazy zapisywać tylko błędy oraz moje logi z aplikacji, żeby widzieć jak aplikacja działa. Zapisuję tylko to, bo do tych błędów będą miał zrobioną na stronie oddzielną podstronę do ich przeglądania. Chciałem aby na tej podstronie były tylko logi, które mnie interesują, żebym nie musiał przeszukiwać dużej liczby."/>
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-05-28 07:27:51 &#43;0100 &#43;0100" />
+
+
+
+
+
+
+
+
+
+
+
+        
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BG79VRW0XP"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'G-BG79VRW0XP');
+		</script>
+    </head>
+
+    <body class="">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                hello world</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#00994d;
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/omnie">o mnie</a></li><li><a href="/posts">wpisy</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://tomaszprasolek.github.io/posts/2020-05-28-serilog-filtrowanie/">Serilog – jak filtrować logi?</a>
+      </h1>
+
+      
+
+      
+
+      
+
+      <div class="post-content">
+        <p>Ostatnio w moim jednym pet projekcie (pisany w ASP.NET Core 3.1.) wymyśliłem sobie tak, aby do bazy zapisywane były tylko te logi, które:</p>
+<ul>
+<li>W polu <code>SourceContext</code> zawieraja się namespace aplikacji lub</li>
+<li>Pole <code>@Exception</code> nie jest puste.</li>
+</ul>
+<p>Chciałem do bazy zapisywać tylko błędy oraz moje logi z aplikacji, żeby widzieć jak aplikacja działa. Zapisuję tylko to, bo do tych błędów będą miał zrobioną na stronie oddzielną podstronę do ich przeglądania. Chciałem aby na tej podstronie były tylko logi, które mnie interesują, żebym nie musiał przeszukiwać dużej liczby.</p>
+<h1 id="jak-to-zrobić">Jak to zrobić?</h1>
+<p>Trzeba doinstalować nugeta <strong>Serilog.Filters.Expression</strong>:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">dotnet add package Serilog.Filters.Expressions
+</code></pre><p>I już można korzystać z filtrów. Są dwie opcje filtrowania:</p>
+<ul>
+<li>ByIncludingOnly</li>
+<li>ByExcluding</li>
+</ul>
+<p>Pewnie znasz angielski, więc możesz się domyślić, że <code>ByIncludingOnly</code> uwzględnia te logi i przekazuje je do odpowiedniego zlewu :-) , a <code>ByExcluding</code> wyklucza i nie zapisuje do loga.</p>
+<p>Składnia pisania warunków jest bardzo podobna do składni SQL.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Category</th>
+<th style="text-align:left">Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Literals</strong></td>
+<td style="text-align:left"><code>123</code>, <code>123.4</code>, <code>'Hello'</code>, <code>true</code>, <code>false</code>, <code>null</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Properties</strong></td>
+<td style="text-align:left"><code>A</code>, <code>A.B</code>, <code>@Level</code>, <code>@Timestamp</code>, <code>@Exception</code>, <code>@Message</code>, <code>@MessageTemplate</code>, <code>@Properties['A-b-c']</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Comparisons</strong></td>
+<td style="text-align:left"><code>A = B</code>, <code>A &lt;&gt; B</code>, <code>A &gt; B</code>, <code>A &gt;= B</code>, <code>A is null</code>, <code>A is not null</code>, <code>A in [1, 2]</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Text</strong></td>
+<td style="text-align:left"><code>A like 'H%'</code>, <code>A not like 'H%'</code>, <code>A like 'Hel_o'</code>, <code>Contains(A, 'H')</code>, <code>StartsWith(A, 'H')</code>, <code>EndsWith(A, 'H')</code>, <code>IndexOf(A, 'H')</code>, <code>Length(A)</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Regular expressions</strong></td>
+<td style="text-align:left"><code>A = /H.*o/</code>, <code>Contains(A, /[lL]/)</code>, other string functions</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Collections</strong></td>
+<td style="text-align:left"><code>A[0] = 'Hello'</code>, <code>A[?] = 'Hello'</code> (any), <code>StartsWith(A[*], 'H')</code> (all), <code>Length(A)</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Maths</strong></td>
+<td style="text-align:left"><code>A + 2</code>, <code>A - 2</code>, <code>A * 2</code>, <code>A % 2</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Logic</strong></td>
+<td style="text-align:left"><code>not A</code>, <code>A and B</code>, <code>A or B</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Grouping</strong></td>
+<td style="text-align:left"><code>A * (B + C)</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Other</strong></td>
+<td style="text-align:left"><code>Has(A)</code>, <code>TypeOf(A)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Tabelkę “zakosiłem” z oficjalnej dokumentacji :-)</p>
+<h1 id="przykład">Przykład</h1>
+<p>Jak to wygląda u mnie? A no tak:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>StartsWith(@Properties[<span style="color:#960050;background-color:#1e0010">&#39;</span>SourceContext<span style="color:#960050;background-color:#1e0010">&#39;</span>] , <span style="color:#960050;background-color:#1e0010">&#39;</span>MyNamespace<span style="color:#960050;background-color:#1e0010">&#39;</span>) or @Exception <span style="color:#66d9ef">is</span> not <span style="color:#66d9ef">null</span>
+</span></span></code></pre></div><p>A tutaj wklejam kawałek mojego pliku kofiguracyjnego:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[<span style="color:#960050;background-color:#1e0010">...</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;WriteTo&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> [
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Name&#34;</span>: <span style="color:#e6db74">&#34;MSSqlServer&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Args&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;connectionString&#34;</span>: <span style="color:#e6db74">&#34;MyConnectionString&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;tableName&#34;</span>: <span style="color:#e6db74">&#34;Log&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>]<span style="color:#960050;background-color:#1e0010">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;Filter&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> [
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Name&#34;</span>: <span style="color:#e6db74">&#34;ByIncludingOnly&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Args&#34;</span>: { <span style="color:#f92672">&#34;expression&#34;</span>: <span style="color:#e6db74">&#34;StartsWith(@Properties[&#39;SourceContext&#39;] , &#39;MyNamespace&#39;) or @Exception is not null&#34;</span> }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#960050;background-color:#1e0010">...</span>]
+</span></span></code></pre></div><h1 id="podsumowanie">Podsumowanie</h1>
+<p>I to tyle :-) Zapytanie podobne do zapytań SQL wystarczy, aby filtrować jakie informacje mają być zapisywane do loga.</p>
+<p>Źródła:
+<a href="https://github.com/serilog/serilog-filters-expressions">https://github.com/serilog/serilog-filters-expressions</a></p>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/serilog/">serilog</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        348 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-05-28 08:27
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>
