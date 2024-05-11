@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Wstęp Co to są sentinel values w EF Core 8 i jak z nich korzystać 😊
+Przykład na początek Mamy tabelę Customers, która wygląda tak:
+CREATE TABLE [dbo].[Customers]( [Id] [int] IDENTITY(1,1) NOT NULL, [Name] [nvarchar](max) NOT NULL, [Status] [int] NOT NULL, [Points] [int] NOT NULL, [Created] [datetime2](7) NOT NULL, -- [... other, not relevant SQL code ...] ALTER TABLE [dbo].[Customers] ADD DEFAULT ((1)) FOR [Status] ALTER TABLE [dbo].[Customers] ADD DEFAULT ((10)) FOR [Points] ALTER TABLE [dbo]." />
+<meta name="keywords" content=", EF Core 8, database, sentinel values" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://tomaszprasolek.github.io/posts/2024-05-11-efcore-sentinelvalues/" />
+
+
+    <title>
+        
+            EF Core 8 - sentinel values :: Blog o programowaniu 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="EF Core 8 - sentinel values">
+<meta itemprop="description" content="Wstęp Co to są sentinel values w EF Core 8 i jak z nich korzystać 😊
+Przykład na początek Mamy tabelę Customers, która wygląda tak:
+CREATE TABLE [dbo].[Customers]( [Id] [int] IDENTITY(1,1) NOT NULL, [Name] [nvarchar](max) NOT NULL, [Status] [int] NOT NULL, [Points] [int] NOT NULL, [Created] [datetime2](7) NOT NULL, -- [... other, not relevant SQL code ...] ALTER TABLE [dbo].[Customers] ADD DEFAULT ((1)) FOR [Status] ALTER TABLE [dbo].[Customers] ADD DEFAULT ((10)) FOR [Points] ALTER TABLE [dbo]."><meta itemprop="datePublished" content="2024-05-11T08:10:06+02:00" />
+<meta itemprop="dateModified" content="2024-05-11T08:10:06+02:00" />
+<meta itemprop="wordCount" content="687">
+<meta itemprop="keywords" content="EF Core 8,database,sentinel values," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="EF Core 8 - sentinel values"/>
+<meta name="twitter:description" content="Wstęp Co to są sentinel values w EF Core 8 i jak z nich korzystać 😊
+Przykład na początek Mamy tabelę Customers, która wygląda tak:
+CREATE TABLE [dbo].[Customers]( [Id] [int] IDENTITY(1,1) NOT NULL, [Name] [nvarchar](max) NOT NULL, [Status] [int] NOT NULL, [Points] [int] NOT NULL, [Created] [datetime2](7) NOT NULL, -- [... other, not relevant SQL code ...] ALTER TABLE [dbo].[Customers] ADD DEFAULT ((1)) FOR [Status] ALTER TABLE [dbo].[Customers] ADD DEFAULT ((10)) FOR [Points] ALTER TABLE [dbo]."/>
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2024-05-11 08:10:06 &#43;0200 CEST" />
+
+
+
+
+
+
+
+
+
+
+
+        
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BG79VRW0XP"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'G-BG79VRW0XP');
+		</script>
+    </head>
+
+    <body class="">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                hello world</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#00994d;
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/omnie">o mnie</a></li><li><a href="/posts">wpisy</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://tomaszprasolek.github.io/posts/2024-05-11-efcore-sentinelvalues/">EF Core 8 - sentinel values</a>
+      </h1>
+
+      
+
+      
+
+      
+
+      <div class="post-content">
+        <h2 id="wstęp">Wstęp</h2>
+<p>Co to są <code>sentinel values</code> w EF Core 8 i jak z nich korzystać 😊</p>
+<h2 id="przykład-na-początek">Przykład na początek</h2>
+<p>Mamy tabelę <code>Customers</code>, która wygląda tak:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> [dbo].[Customers](
+</span></span><span style="display:flex;"><span>	[Id] [int] <span style="color:#66d9ef">IDENTITY</span>(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>	[Name] [nvarchar](<span style="color:#66d9ef">max</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>	[Status] [int] <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>	[Points] [int] <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>	[Created] [datetime2](<span style="color:#ae81ff">7</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- [... other, not relevant SQL code ...]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> [dbo].[Customers] <span style="color:#66d9ef">ADD</span>  <span style="color:#66d9ef">DEFAULT</span> ((<span style="color:#ae81ff">1</span>)) <span style="color:#66d9ef">FOR</span> [Status]
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> [dbo].[Customers] <span style="color:#66d9ef">ADD</span>  <span style="color:#66d9ef">DEFAULT</span> ((<span style="color:#ae81ff">10</span>)) <span style="color:#66d9ef">FOR</span> [Points]
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> [dbo].[Customers] <span style="color:#66d9ef">ADD</span>  <span style="color:#66d9ef">DEFAULT</span> (getdate()) <span style="color:#66d9ef">FOR</span> [Created]
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> [dbo].[Customers] <span style="color:#66d9ef">ADD</span>  <span style="color:#66d9ef">DEFAULT</span> (N<span style="color:#e6db74">&#39;&#39;</span>) <span style="color:#66d9ef">FOR</span> [Name]
+</span></span></code></pre></div><p>Bardzo prosta tabela, zaznaczę tylko że Status to jest <code>enum</code> w kodzie.<br>
+Tabela zawiera informacje o klientach, każdy klient posiada:</p>
+<ul>
+<li>nazwę,</li>
+<li>status (new, verified, deactivated), <strong>domyślna wartość to: New</strong> oraz</li>
+<li>liczbę punktów, <strong>domyślna wartość to 10</strong>.</li>
+</ul>
+<p>W kodzie konfiguracja pola <code>Points</code> wygląda tak:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>modelBuilder.Entity&lt;Customer&gt;()
+</span></span><span style="display:flex;"><span>	.Property(x =&gt; x.Points)
+</span></span><span style="display:flex;"><span>	.IsRequired()
+</span></span><span style="display:flex;"><span>	.HasDefaultValue(<span style="color:#ae81ff">10</span>);
+</span></span></code></pre></div><p>Przyda Nam się to w dalszej części wpisu. Konfiguracja innych pól Nas nie interesuje.</p>
+<h3 id="dodawanie-klientów">Dodawanie klientów</h3>
+<p>Dodajemy dwóch klientów:</p>
+<ul>
+<li>dla pierwszego używamy domyślnych wartości kolumn,</li>
+<li>dla drugiego chcemy z góry ustalić że będzie miał ZERO punktów.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>AddCustomer(<span style="color:#66d9ef">new</span> Customer {Name = <span style="color:#e6db74">&#34;Default values, points: 10&#34;</span>});
+</span></span><span style="display:flex;"><span>AddCustomer(<span style="color:#66d9ef">new</span> Customer {Name = <span style="color:#e6db74">&#34;Zero points&#34;</span>, Points = <span style="color:#ae81ff">0</span> });
+</span></span></code></pre></div><p>Co otrzymujemy w wyniku takiego kodu:</p>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Name</th>
+<th>Status</th>
+<th>Points</th>
+<th>Created</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Default values, points: 10</td>
+<td>1</td>
+<td>10</td>
+<td>2024-05-11 05:45:24.9888016</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Zero points</td>
+<td>1</td>
+<td>10</td>
+<td>2024-05-11 05:45:24.9888016</td>
+</tr>
+</tbody>
+</table>
+<p>Każdy klient ma 10 punktów. Przecież jasno wskazaliśmy, że ma być 0.</p>
+<p><strong>Co się stało?</strong> 🤔</p>
+<h2 id="wartości-domyślne-w-konfiguracji-ef-core">Wartości domyślne w konfiguracji EF Core</h2>
+<p>Wartość domyślna (CLR default) dla <code>default(int)</code> to jest właśnie 0.<br>
+EF Core działa tak, że musi wiedzieć kiedy do bazy wstawić tą naszą wartość domyślną. Czyli 10 w przypadku punktów.
+Porównuje właśnie wstawianą wartość do domyślnej wartości tego typu w .NET.</p>
+<p>W naszym przypadku chcieliśmy wpisać klientowi 0 punktów, czyli <code>default(int)</code>, więc została wstawiona nasza wartość domyślna czyli 10.</p>
+<h2 id="sentinel-values">Sentinel values</h2>
+<p>I tutaj wchodzą do gry <code>sentinel values</code> czyli po polsku <code>wartości wartownicze</code> 😊</p>
+<p>Żeby móc wstawić klientowi 0 punktów trzeba skonfigurować pole w następujący sposób:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>modelBuilder.Entity&lt;Customer&gt;()
+</span></span><span style="display:flex;"><span>	.Property(x =&gt; x.Points)
+</span></span><span style="display:flex;"><span>	.IsRequired()
+</span></span><span style="display:flex;"><span>	.HasDefaultValue(<span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>	.HasSentinel(-<span style="color:#ae81ff">1</span>);
+</span></span></code></pre></div><p>To oznacza że <code>jak będzie 0 to wstaw 0, jak będzie -1 to wstaw wartość domyślną</code>, czyli w tym przypadku 10.</p>
+<p>Przy takiej konfiguracji do bazy zostaną zapisane takie dane:</p>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Name</th>
+<th>Status</th>
+<th>Points</th>
+<th>Created</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>Default values, points: 10</td>
+<td>1</td>
+<td>0</td>
+<td>2024-05-11 05:45:24.9888016</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Zero points</td>
+<td>1</td>
+<td>0</td>
+<td>2024-05-11 05:45:24.9888016</td>
+</tr>
+</tbody>
+</table>
+<p>Każdy klient ma <strong>0 punktów</strong>. Co tym razem się stało? 🤔</p>
+<h2 id="wartości-domyślne-w-modelu">Wartości domyślne w modelu</h2>
+<p>Stało się to, że pierwszy klient nie ma ustawionych punktów, czyli <code>default(int) = 0</code>, a 0 można już wstawić do tabeli i to się właśnie stało 😊</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// TUTAJ JEST POINTS == 0</span>
+</span></span><span style="display:flex;"><span>AddCustomer(<span style="color:#66d9ef">new</span> Customer {Name = <span style="color:#e6db74">&#34;Default values, points: 10&#34;</span>});
+</span></span><span style="display:flex;"><span>AddCustomer(<span style="color:#66d9ef">new</span> Customer {Name = <span style="color:#e6db74">&#34;Zero points&#34;</span>, Points = <span style="color:#ae81ff">0</span> });
+</span></span></code></pre></div><p>Żeby wszystko działało tak jak chcemy, to trzeba w modelu zrobić wartość domyślną dla punktów:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">sealed</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Customer</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [...other code...]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Points { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">init</span>; } = <span style="color:#ae81ff">10</span>; <span style="color:#75715e">// &lt;&lt; Domyślne 10 punktów</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [...other code...]</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Dopiero wtedy wszystko będzie w bazie się zapisywało tak jak chcemy.</p>
+<table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Name</th>
+<th>Status</th>
+<th>Points</th>
+<th>Created</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>Default values, points: 10</td>
+<td>1</td>
+<td>10</td>
+<td>2024-05-11 05:45:24.9888016</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Zero points</td>
+<td>1</td>
+<td>0</td>
+<td>2024-05-11 05:45:24.9888016</td>
+</tr>
+</tbody>
+</table>
+<p>W tym momencie wartość domyślna 10 jest w dwóch miejscach: w modelu oraz konfiguracji EF Core. Żeby nie duplikować danych można od razu w modelu dać <code>-1</code>, tą wartość ustawioną jako wartownik (metoda <code>HasSentinel</code>) i wtedy wszystko będzie działać jak tego oczekujemy.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// sentinel value configure in OnModelCreating</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Points { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">init</span>; } = -<span style="color:#ae81ff">1</span>;
+</span></span></code></pre></div><h2 id="drugi-sposób">Drugi sposób</h2>
+<p>Inny sposobem na poradzenie sobie z tym jest zrobienie pola nullowalnego dla naszej właściwości i tam ogarnięcie tej wartości domyślnej.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> <span style="color:#66d9ef">int?</span> _points;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Points
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">get</span> =&gt; _points ?? <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">init</span> =&gt; _points = <span style="color:#66d9ef">value</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>W konfiguracji już nie trzeba robić <code>.HasSentinel(-1)</code>.</p>
+<h2 id="podsumowanie">Podsumowanie</h2>
+<p>Jak widać na powyższym przykładzie trzeba uważać z wartościami domyślnymi dla kolumn. Może to trochę popsuć nasze dane. Po pewnym czasie może się okazać, że na produkcji klient ma za dużo punktów lub za mało niż na prawdę powinien mieć 😊.</p>
+<p>Kod którego użyłem we wpisie znajduje się na moin GitHubie: <a href="https://github.com/tomaszprasolek/EfCore8_SentinelValues">https://github.com/tomaszprasolek/EfCore8_SentinelValues</a></p>
+<h3 id="linki">Linki</h3>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/ef/core/what-is-new/ef-core-8.0/whatsnew#sentinel-values-and-database-defaults">What&rsquo;s New in EF Core 8</a></li>
+</ul>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/ef-core-8/">EF Core 8</a></span>
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/database/">database</a></span>
+        <span class="tag"><a href="https://tomaszprasolek.github.io/tags/sentinel-values/">sentinel values</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        687 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2024-05-11 08:10
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>
