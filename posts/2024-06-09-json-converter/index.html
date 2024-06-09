@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Wstęp Ostatnio w pracy integrowałem nasz system z zewnętrznym API. Musiałem zintegorać zarządzanie zadaniami klienta. W wyniku czego powstał w kodzie taki enum:
+internal enum CustomerTaskStatus { Pending = 1, Completed = 2, Cancelled = 3, } Nie trzeba tłumaczyć, wiadomo o co chodzi 🙂
+Z racji tego, że ten status dostaję z zewnętrznego API, nie mam wpływu jakie wartości zwróci. A zwraca takie wartości:
+PENDINGCOMPLETEDCANCELLED Domyślny deserializer ASP." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://tomaszprasolek.github.io/posts/2024-06-09-json-converter/" />
+
+
+    <title>
+        
+            Własny JsonConverter :: Blog o programowaniu 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Własny JsonConverter">
+<meta itemprop="description" content="Wstęp Ostatnio w pracy integrowałem nasz system z zewnętrznym API. Musiałem zintegorać zarządzanie zadaniami klienta. W wyniku czego powstał w kodzie taki enum:
+internal enum CustomerTaskStatus { Pending = 1, Completed = 2, Cancelled = 3, } Nie trzeba tłumaczyć, wiadomo o co chodzi 🙂
+Z racji tego, że ten status dostaję z zewnętrznego API, nie mam wpływu jakie wartości zwróci. A zwraca takie wartości:
+PENDINGCOMPLETEDCANCELLED Domyślny deserializer ASP."><meta itemprop="datePublished" content="2024-06-09T15:48:06+02:00" />
+<meta itemprop="dateModified" content="2024-06-09T15:48:06+02:00" />
+<meta itemprop="wordCount" content="333">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Własny JsonConverter"/>
+<meta name="twitter:description" content="Wstęp Ostatnio w pracy integrowałem nasz system z zewnętrznym API. Musiałem zintegorać zarządzanie zadaniami klienta. W wyniku czego powstał w kodzie taki enum:
+internal enum CustomerTaskStatus { Pending = 1, Completed = 2, Cancelled = 3, } Nie trzeba tłumaczyć, wiadomo o co chodzi 🙂
+Z racji tego, że ten status dostaję z zewnętrznego API, nie mam wpływu jakie wartości zwróci. A zwraca takie wartości:
+PENDINGCOMPLETEDCANCELLED Domyślny deserializer ASP."/>
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2024-06-09 15:48:06 &#43;0200 CEST" />
+
+
+
+
+
+
+
+
+
+
+
+        
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BG79VRW0XP"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'G-BG79VRW0XP');
+		</script>
+    </head>
+
+    <body class="">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                hello world</span>
+            <span class="logo__cursor" style=
+                  "
+                   background-color:#00994d;
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/omnie">o mnie</a></li><li><a href="/posts">wpisy</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://tomaszprasolek.github.io/posts/2024-06-09-json-converter/">Własny JsonConverter</a>
+      </h1>
+
+      
+
+      
+
+      
+
+      <div class="post-content">
+        <h2 id="wstęp">Wstęp</h2>
+<p>Ostatnio w pracy integrowałem nasz system z zewnętrznym API. Musiałem zintegorać zarządzanie zadaniami klienta.
+W wyniku czego powstał w kodzie taki enum:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">enum</span> CustomerTaskStatus
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    Pending = <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    Completed = <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>    Cancelled = <span style="color:#ae81ff">3</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Nie trzeba tłumaczyć, wiadomo o co chodzi 🙂</p>
+<p>Z racji tego, że ten status dostaję z zewnętrznego API, nie mam wpływu jakie wartości zwróci. A zwraca takie wartości:</p>
+<pre tabindex="0"><code class="language-code" data-lang="code">PENDING
+COMPLETED
+CANCELLED
+</code></pre><p>Domyślny deserializer ASP.NET Core nie poradzi sobie z tym, więc trzeba napisać własny.</p>
+<h2 id="przykład-z-domyślnym-deserializerem">Przykład z domyślnym deserializerem</h2>
+<p>Kod uproszczony na maksa, aby tylko pokazać problem z deserializerem.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Text.Json;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Text.Json.Serialization;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">string</span> json = <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span>              {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;Status&#34;</span>: <span style="color:#e6db74">&#34;PENDING&#34;</span>
+</span></span><span style="display:flex;"><span>              }
+</span></span><span style="display:flex;"><span>              <span style="color:#e6db74">&#34;&#34;&#34;;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> customerTask = JsonSerializer.Deserialize&lt;CustomerTask&gt;(json);
+</span></span><span style="display:flex;"><span>Console.WriteLine(<span style="color:#e6db74">$&#34;Status: {customerTask!.Status}&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Obiekt do którego deserializujemy</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">sealed</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CustomerTask</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> CustomerTaskStatus Status { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">enum</span> CustomerTaskStatus
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    Pending = <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    Completed = <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>    Cancelled = <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>W takim przypadku dostajemy błąd:</p>
+<p><strong>System.Text.Json.JsonException: The JSON value could not be converted to CustomerTaskStatus. Path: $.Status | LineNumber: 1 | BytePositionInLine: 21</strong></p>
+<p>ponieważ nie może sobie poradzić z zamianą <code>PENDING</code> na <code>Pending</code>.</p>
+<h3 id="właśny-jsonconverter">Właśny JsonConverter</h3>
+<p>Dodajemy własny <code>JsonConverter</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">sealed</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CustomerTaskStatusJsonConverter</span> : JsonConverter&lt;CustomerTaskStatus&gt;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/// &lt;inheritdoc /&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> CustomerTaskStatus Read(<span style="color:#66d9ef">ref</span> Utf8JsonReader reader,
+</span></span><span style="display:flex;"><span>        Type typeToConvert,
+</span></span><span style="display:flex;"><span>        JsonSerializerOptions options)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> Enum.Parse&lt;CustomerTaskStatus&gt;(reader.GetString()!, <span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/// &lt;inheritdoc /&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> Write(Utf8JsonWriter writer,
+</span></span><span style="display:flex;"><span>        CustomerTaskStatus <span style="color:#66d9ef">value</span>,
+</span></span><span style="display:flex;"><span>        JsonSerializerOptions options)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        writer.WriteStringValue(<span style="color:#66d9ef">value</span>.ToString().ToUpper());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Nasz konwerter musi dziedziczyć po generecznym <code> JsonConverter&lt;CustomerTaskStatus&gt;</code>, gdzie przekazujemy naszego enuma.
+Musimy napisać implementację 2 metoda:</p>
+<ul>
+<li><code>Read</code> - która jest używana przy deserializacji. W naszym przypadku używam <code>Enum.Parse</code>, gdzie ostatni parametr jest <code>true</code>. <strong>A ten parametr oznacza właśnie, aby zignorował wielkość liter.</strong></li>
+<li><code>Write</code> - które jest używana przy serializji</li>
+</ul>
+<p>Jeszcze tylko musimy oznaczyć naszą właściwość, aby użyć tego convertera</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">sealed</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CustomerTask</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [JsonConverter(typeof(CustomerTaskStatusJsonConverter))]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> CustomerTaskStatus Status { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>I to tyle 😄
+Wszystko działa. Można wrócić do dalszej integracji zewnętrznego API 🙂</p>
+<p>Cały kod tego przykładu jest dostępny na GitHubie: <a href="https://gist.github.com/tomaszprasolek/930f600f9d414045c0088c6c2d718fe7">https://gist.github.com/tomaszprasolek/930f600f9d414045c0088c6c2d718fe7</a></p>
+<h3 id="linki">Linki</h3>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/converters-how-to?pivots=dotnet-8-0">How to write custom converters for JSON serialization (marshalling) in .NET</a></li>
+</ul>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        333 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2024-06-09 15:48
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+
+    
+
+    
+
+    <div>
+      <script src="https://utteranc.es/client.js"
+        repo="tomaszprasolek/tomaszprasolek.github.io"
+        issue-term="pathname"
+        label="blog-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>    
+    </div>
+
+  </main>
+
+            </div>
+
+            
+                <footer>
+  <div>
+    <p>
+    &copy; 2024 Tomasz Prasołek | Theme <a href="https://github.com/rhazdon/hugo-theme-hello-friend-ng" target="_blank" >Hello Friend NG</a>
+    </p>
+  </div>
+</footer>
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>
